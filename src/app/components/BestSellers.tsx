@@ -1,0 +1,238 @@
+import { motion } from "motion/react";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router";
+import { supabase } from "../lib/supabase";
+import { useCart } from "../context/CartContext";
+import { useLanguage } from "../context/LanguageContext";
+import { useTranslatedProduct, useTranslatedSetting } from "../hooks/useTranslationHelpers";
+import { useTranslation } from "react-i18next";
+
+export function BestSellers() {
+  const [products, setProducts] = useState<any[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const { addItem } = useCart();
+  const { language } = useLanguage();
+  const { t } = useTranslation();
+  const bestSellersTitle = useTranslatedSetting("best_sellers_title", "Best Sellers");
+  const [isDragging, setIsDragging] = useState(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+
+  // Responsive configuration with breakpoints
+  const getBreakpointConfig = () => {
+    if (typeof window === 'undefined') return { slidesPerView: 4, spaceBetween: 24 };
+    const w = window.innerWidth;
+    if (w < 480) return { slidesPerView: 1.2, spaceBetween: 12 }; // Mobile tiny - 1.2 items
+    if (w < 768) return { slidesPerView: 2, spaceBetween: 16 }; // Mobile normal - 2 items
+    if (w < 1024) return { slidesPerView: 3, spaceBetween: 20 }; // Tablet - 3 items
+    return { slidesPerView: 4, spaceBetween: 24 }; // Desktop -4 items
+  };
+  
+  const [config, setConfig] = useState(getBreakpointConfig());
+
+  useEffect(() => {
+    const handleResize = () => setConfig(getBreakpointConfig());
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    loadBestSellers();
+  }, []);
+
+  async function loadBestSellers() {
+    try {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("is_best_seller", true)
+        .order("created_at", { ascending: false })
+        .limit(10); // Max 10 products
+      console.log("Best sellers data:", data);
+      console.log("Best sellers error:", error);
+      setProducts(data || []);
+    } catch (error) {
+      console.error("Error loading best sellers:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const maxIndex = Math.max(0, products.length - Math.floor(config.slidesPerView));
+  
+  const next = () => {
+    setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
+  };
+
+  const prev = () => {
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
+  };
+
+  if (loading) return null;
+
+  return (
+    <section className="relative py-20 sm:py-32 px-4 sm:px-6 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[var(--burgundy-dark)] via-[var(--black-soft)] to-[var(--background)]" />
+
+      {/* Floating Smoke Effect */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(8)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-32 h-32 rounded-full bg-[var(--gold)] opacity-5 blur-3xl"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              x: [0, 50, 0],
+              y: [0, -80, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 8 + Math.random() * 4,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto">
+        {/* Header - Compact for mobile */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-10 sm:mb-16"
+        >
+          <span className="text-[var(--gold)] tracking-[0.25em] uppercase text-xs sm:text-sm">
+            {t('bestSellers.tagline', 'Most Loved')}
+          </span>
+          <h2
+            className="text-3xl sm:text-5xl md:text-6xl mt-3 sm:mt-4 text-foreground"
+            style={{ fontFamily: "Playfair Display, serif" }}
+          >
+            {bestSellersTitle}
+          </h2>
+        </motion.div>
+
+        {/* Carousel */}
+        {products.length > 0 && (
+          <div className="relative">
+            {/* Left Nav Button */}
+            {products.length > Math.floor(config.slidesPerView) && (
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={prev}
+                disabled={currentIndex === 0}
+                className={`absolute top-1/2 left-0 sm:left-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors ${
+                  currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
+              </motion.button>
+            )}
+            
+            {/* Right Nav Button */}
+            {products.length > Math.floor(config.slidesPerView) && (
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={next}
+                disabled={currentIndex >= maxIndex}
+                className={`absolute top-1/2 right-0 sm:right-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors ${
+                  currentIndex >= maxIndex ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
+              </motion.button>
+            )}
+
+            <div className="overflow-hidden px-8 sm:px-10">
+              <motion.div
+                className="flex"
+                style={{ gap: config.spaceBetween }}
+                animate={{ x: `-${currentIndex * (100 / config.slidesPerView)}%` }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
+              >
+                {products.map((product, index) => {
+                  const { name } = useTranslatedProduct(product);
+                  return (
+                    <motion.div
+                      key={product.id}
+                      className={`flex-shrink-0`}
+                      style={{ width: `calc(100% / ${config.slidesPerView} - ${config.spaceBetween - (config.spaceBetween / config.slidesPerView)}px)` }}
+                      whileHover={{ scale: 1.03 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Link to={`/shop/${product.slug}`} className="relative group cursor-pointer block">
+                        {/* Card */}
+                        <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-[var(--black-soft)] border border-[var(--border)]">
+                          <ImageWithFallback
+                            src={product.image_url || "https://images.unsplash.com/photo-1778058505620-6911582e5a9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg"}
+                            alt={name}
+                            className="h-full w-full object-cover"
+                          />
+
+                          {/* Hover Overlay */}
+                          <motion.div
+                            className="absolute inset-0 bg-gradient-to-t from-[var(--burgundy)] via-transparent to-transparent opacity-0 group-hover:opacity-90 transition-opacity duration-300"
+                          />
+
+                          {/* Info Overlay */}
+                          <motion.div
+                            className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300"
+                          >
+                            <h3
+                              className="text-lg sm:text-2xl mb-1 sm:mb-2 text-foreground hover:text-[var(--gold-light)] transition-colors"
+                              style={{ fontFamily: "Playfair Display, serif" }}
+                            >
+                              {name}
+                            </h3>
+                            <div className="flex items-center justify-between">
+                              <span className="text-base sm:text-xl text-[var(--gold)]">
+                                ${Number(product.price).toLocaleString()}
+                              </span>
+                              {product.stock > 0 ? (
+                                <motion.button
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    addItem({
+                                      id: product.id,
+                                      name: name,
+                                      collection: product.category || "",
+                                      price: Number(product.price),
+                                      priceFormatted: `$${Number(product.price).toLocaleString()}`,
+                                      image: product.image_url || "",
+                                      size: product.size_ml ? `${product.size_ml}ml` : "",
+                                    });
+                                  }}
+                                  className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[var(--gold)] text-[var(--black)] text-xs sm:text-sm tracking-wider uppercase"
+                                >
+                                  Shop Now
+                                </motion.button>
+                              ) : null}
+                            </div>
+                          </motion.div>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
