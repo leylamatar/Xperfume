@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router";
 import { useEffect, useState } from "react";
+import { Toaster } from "sonner";
 import { CartProvider } from "./context/CartContext";
 import { SettingsProvider } from "./context/SettingsContext";
 import { LanguageProvider } from "./context/LanguageContext";
@@ -112,6 +113,7 @@ function AppShell() {
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-foreground overflow-x-hidden">
+      <Toaster />
       <ScrollToTop />
       <Navigation />
       <main>

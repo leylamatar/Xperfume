@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion } from "motion/react";
 import { SlidersHorizontal, Search, ChevronDown, Star, X } from "lucide-react";
+import { toast } from "sonner";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useCart } from "../context/CartContext";
 import { Link } from "react-router";
@@ -27,6 +28,7 @@ export function ShopPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
+  const [addedProductId, setAddedProductId] = useState<string | null>(null);
   const { addItem } = useCart();
   const { t } = useTranslation();
 
@@ -85,6 +87,25 @@ export function ShopPage() {
     return result;
   }, [products, activeCategory, activeSort, activePriceRange, searchQuery]);
 
+  const handleAddToCart = (e: React.MouseEvent, product: any, translatedName: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem({
+      id: product.id,
+      name: translatedName,
+      collection: product.category || "",
+      price: Number(product.price),
+      priceFormatted: `$${Number(product.price).toLocaleString()}`,
+      image: product.image_url || "",
+      size: product.size_ml ? `${product.size_ml}ml` : "",
+    });
+    setAddedProductId(product.id);
+    toast.success(t("common.addedToCart"), {
+      description: t("common.productAddedSuccessfully"),
+    });
+    setTimeout(() => setAddedProductId(null), 2000);
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center text-foreground">Loading...</div>;
 
   return (
@@ -105,13 +126,13 @@ export function ShopPage() {
             transition={{ duration: 0.8 }}
           >
             <p className="text-[var(--gold)] tracking-[0.3em] uppercase text-sm mb-3">
-              The Collection
+              {t("shop.collection")}
             </p>
             <h1
               className="text-5xl md:text-7xl text-foreground"
               style={{ fontFamily: "Playfair Display, serif" }}
             >
-              All Fragrances
+              {t("shop.title")}
             </h1>
           </motion.div>
         </div>
@@ -123,7 +144,7 @@ export function ShopPage() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted-foreground)]" />
             <input
               type="text"
-              placeholder="Search fragrances…"
+              placeholder={t("shop.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground placeholder:text-[var(--muted-foreground)] focus:outline-none focus:border-[var(--gold)] transition-colors text-sm"
@@ -137,7 +158,7 @@ export function ShopPage() {
               className="flex items-center gap-2 px-5 py-3 border border-[var(--border)] text-[var(--muted-foreground)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors text-sm tracking-wider"
             >
               <SlidersHorizontal className="w-4 h-4" />
-              Filters
+              {t("shop.filters")}
             </motion.button>
 
             <div className="relative">
@@ -165,7 +186,7 @@ export function ShopPage() {
             </div>
 
             <span className="text-[var(--muted-foreground)] text-sm">
-              {filtered.length} {filtered.length === 1 ? "result" : "results"}
+              {filtered.length} {filtered.length === 1 ? t("shop.result") : t("shop.results")}
             </span>
           </div>
         </div>
@@ -181,7 +202,7 @@ export function ShopPage() {
                 : "border border-[var(--border)] text-[var(--muted-foreground)] hover:border-[var(--gold)] hover:text-[var(--gold)]"
             }`}
           >
-            All
+            {t("shop.all")}
           </motion.button>
           {categories.map((cat) => (
             <motion.button
@@ -208,7 +229,7 @@ export function ShopPage() {
             >
               <div className="bg-[var(--black-soft)] border border-[var(--border)] p-6 sticky top-24">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-foreground tracking-wider uppercase text-sm">Filters</h3>
+                  <h3 className="text-foreground tracking-wider uppercase text-sm">{t("shop.filters")}</h3>
                   <button onClick={() => setShowFilters(false)} className="text-[var(--muted-foreground)] hover:text-[var(--gold)]">
                     <X className="w-4 h-4" />
                   </button>
@@ -240,12 +261,12 @@ export function ShopPage() {
           <div className="flex-1">
             {filtered.length === 0 ? (
               <div className="text-center py-20">
-                <p className="text-[var(--muted-foreground)] text-lg mb-4">No products found.</p>
+                <p className="text-[var(--muted-foreground)] text-lg mb-4">{t("shop.noProducts")}</p>
                 <button
                   onClick={() => { setActiveCategory(null); setSearchQuery(""); setActivePriceRange(priceRanges[0]); }}
                   className="text-[var(--gold)] tracking-wider uppercase text-sm border border-[var(--gold)] px-6 py-2 hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors"
                 >
-                  Clear Filters
+                  {t("shop.clearFilters")}
                 </button>
               </div>
             ) : (
@@ -271,7 +292,7 @@ export function ShopPage() {
                         <div className="relative overflow-hidden bg-gradient-to-b from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)]">
                           <div className="absolute top-4 left-4 z-10 flex gap-2">
                             {product.is_featured && (
-                              <span className="bg-[var(--gold)] text-[var(--black)] text-xs px-3 py-1 tracking-wider uppercase">Featured</span>
+                              <span className="bg-[var(--gold)] text-[var(--black)] text-xs px-3 py-1 tracking-wider uppercase">{t("featured.tagline")}</span>
                             )}
                           </div>
 
@@ -311,22 +332,13 @@ export function ShopPage() {
                               </div>
                               {product.stock > 0 ? (
                                 <motion.button
+                                  type="button"
                                   whileHover={{ scale: 1.05 }}
                                   whileTap={{ scale: 0.95 }}
-                                  onClick={() =>
-                                    addItem({
-                                      id: product.id,
-                                      name: name,
-                                      collection: product.category || "",
-                                      price: Number(product.price),
-                                      priceFormatted: `$${Number(product.price).toLocaleString()}`,
-                                      image: product.image_url || "",
-                                      size: product.size_ml ? `${product.size_ml}ml` : "",
-                                    })
-                                  }
+                                  onClick={(e) => handleAddToCart(e, product, name)}
                                   className="px-5 py-2 text-xs border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors tracking-wider uppercase"
                                 >
-                                  {t("featured.addToCart")}
+                                  {addedProductId === product.id ? t("common.addedToCart") : t("featured.addToCart")}
                                 </motion.button>
                               ) : (
                                 <span className="text-[var(--muted-foreground)] text-xs tracking-wider uppercase">Out of Stock</span>

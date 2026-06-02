@@ -1,19 +1,16 @@
 import { motion } from "motion/react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router";
 import { supabase } from "../lib/supabase";
-import { useCart } from "../context/CartContext";
 import { useLanguage } from "../context/LanguageContext";
-import { useTranslatedProduct, useTranslatedSetting } from "../hooks/useTranslationHelpers";
+import { useTranslatedSetting } from "../hooks/useTranslationHelpers";
 import { useTranslation } from "react-i18next";
+import { BestSellersProductCard } from "./BestSellersProductCard";
 
 export function BestSellers() {
   const [products, setProducts] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const { addItem } = useCart();
   const { language } = useLanguage();
   const { t } = useTranslation();
   const bestSellersTitle = useTranslatedSetting("best_sellers_title", "Best Sellers");
@@ -161,73 +158,14 @@ export function BestSellers() {
                 animate={{ x: `-${currentIndex * (100 / config.slidesPerView)}%` }}
                 transition={{ duration: 0.6, ease: "easeInOut" }}
               >
-                {products.map((product, index) => {
-                  const { name } = useTranslatedProduct(product);
-                  return (
-                    <motion.div
-                      key={product.id}
-                      className={`flex-shrink-0`}
-                      style={{ width: `calc(100% / ${config.slidesPerView} - ${config.spaceBetween - (config.spaceBetween / config.slidesPerView)}px)` }}
-                      whileHover={{ scale: 1.03 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <Link to={`/shop/${product.slug}`} className="relative group cursor-pointer block">
-                        {/* Card */}
-                        <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-[var(--black-soft)] border border-[var(--border)]">
-                          <ImageWithFallback
-                            src={product.image_url || "https://images.unsplash.com/photo-1778058505620-6911582e5a9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg"}
-                            alt={name}
-                            className="h-full w-full object-cover"
-                          />
-
-                          {/* Hover Overlay */}
-                          <motion.div
-                            className="absolute inset-0 bg-gradient-to-t from-[var(--burgundy)] via-transparent to-transparent opacity-0 group-hover:opacity-90 transition-opacity duration-300"
-                          />
-
-                          {/* Info Overlay */}
-                          <motion.div
-                            className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300"
-                          >
-                            <h3
-                              className="text-lg sm:text-2xl mb-1 sm:mb-2 text-foreground hover:text-[var(--gold-light)] transition-colors"
-                              style={{ fontFamily: "Playfair Display, serif" }}
-                            >
-                              {name}
-                            </h3>
-                            <div className="flex items-center justify-between">
-                              <span className="text-base sm:text-xl text-[var(--gold)]">
-                                ${Number(product.price).toLocaleString()}
-                              </span>
-                              {product.stock > 0 ? (
-                                <motion.button
-                                  whileHover={{ scale: 1.05 }}
-                                  whileTap={{ scale: 0.95 }}
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    addItem({
-                                      id: product.id,
-                                      name: name,
-                                      collection: product.category || "",
-                                      price: Number(product.price),
-                                      priceFormatted: `$${Number(product.price).toLocaleString()}`,
-                                      image: product.image_url || "",
-                                      size: product.size_ml ? `${product.size_ml}ml` : "",
-                                    });
-                                  }}
-                                  className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[var(--gold)] text-[var(--black)] text-xs sm:text-sm tracking-wider uppercase"
-                                >
-                                  Shop Now
-                                </motion.button>
-                              ) : null}
-                            </div>
-                          </motion.div>
-                        </div>
-                      </Link>
-                    </motion.div>
-                  );
-                })}
+                {products.map((product) => (
+                  <BestSellersProductCard
+                    key={product.id}
+                    product={product}
+                    slidesPerView={config.slidesPerView}
+                    spaceBetween={config.spaceBetween}
+                  />
+                ))}
               </motion.div>
             </div>
           </div>

@@ -118,7 +118,12 @@ const DEFAULT_TRANSLATIONS_EN = {
     shippingPolicy: "Shipping Policy"
   },
   language: { english: "English", arabic: "العربية" },
-  common: { add: "Add", edit: "Edit", delete: "Delete", save: "Save", cancel: "Cancel", back: "Back to Home" },
+  common: { add: "Add", edit: "Edit", delete: "Delete", save: "Save", cancel: "Cancel", back: "Back to Home", addedToCart: "Added to Cart!", productAddedSuccessfully: "Product successfully added to your cart" },
+  checkoutSuccess: {
+    title: "Your order has been successfully received.",
+    description: "We will contact you soon to confirm the details.",
+    backToShop: "Back to Shop"
+  },
   contact: {
     title: "Contact Us",
     subtitle: "Have a question or want to learn more about our fragrances? We'd love to hear from you.",
@@ -228,7 +233,12 @@ const DEFAULT_TRANSLATIONS_AR = {
     shippingPolicy: "سياسة الشحن"
   },
   language: { english: "English", arabic: "العربية" },
-  common: { add: "إضافة", edit: "تعديل", delete: "حذف", save: "حفظ", cancel: "إلغاء", back: "العودة للرئيسية" },
+  common: { add: "إضافة", edit: "تعديل", delete: "حذف", save: "حفظ", cancel: "إلغاء", back: "العودة للرئيسية", addedToCart: "تمت الإضافة إلى السلة!", productAddedSuccessfully: "تم إضافة المنتج إلى سلتك بنجاح" },
+  checkoutSuccess: {
+    title: "تم استلام طلبك بنجاح",
+    description: "سنتواصل معك قريباً لتأكيد التفاصيل.",
+    backToShop: "العودة إلى المتجر"
+  },
   contact: {
     title: "تواصل معنا",
     subtitle: "لديك سؤال أو تريد معرفة المزيد عن عطورنا؟ نود أن نسمع منك.",
@@ -274,7 +284,7 @@ export function AdminTranslationsPage() {
   const flatDefaultAr = flattenObject(DEFAULT_TRANSLATIONS_AR);
 
   // Section groups
-  const sections = ["all", "nav", "hero", "featured", "bestSellers", "shop", "productDetail", "cart", "checkout", "orderSuccess", "footer", "common", "about", "contact", "brandStory", "testimonials"];
+  const sections = ["all", "nav", "hero", "featured", "bestSellers", "shop", "productDetail", "cart", "checkout", "checkoutSuccess", "orderSuccess", "footer", "common", "about", "contact", "brandStory", "testimonials"];
 
   useEffect(() => {
     loadTranslations();

@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useNavigate } from "react-router";
-import { Lock } from "lucide-react";
+import { Lock, Check } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useLanguage } from "../context/LanguageContext";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { supabase } from "../lib/supabase";
 import { useTranslation } from "react-i18next";
@@ -42,9 +43,11 @@ function InputField({
 export function CheckoutPage() {
   const { items, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
+  const { language } = useLanguage();
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const { t } = useTranslation();
 
   const [form, setForm] = useState({
@@ -55,12 +58,12 @@ export function CheckoutPage() {
   });
 
   useEffect(() => {
-    if (items.length === 0) {
+    if (items.length === 0 && !showSuccessModal) {
       navigate("/shop");
       return;
     }
     loadSettings();
-  }, [items.length]);
+  }, [items.length, showSuccessModal]);
 
   async function loadSettings() {
     try {
@@ -75,40 +78,45 @@ export function CheckoutPage() {
     }
   }
 
-  async function generateOrderNumber(): Promise<string> {
-    const year = new Date().getFullYear();
-    const { data, count } = await supabase
-      .from("orders")
-      .select("*", { count: "exact" })
-      .gte("created_at", `${year}-01-01`);
-    const seq = (count || 0) + 1;
-    return `PRF-${year}-${seq.toString().padStart(6, "0")}`;
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    console.log("=== 1. Handle Submit CALLED ===");
     setSubmitting(true);
     try {
-      const orderNumber = await generateOrderNumber();
+      console.log("=== 2. Starting Order ===");
+      console.log("Cart items:", items);
+      console.log("Form data:", form);
+      console.log("Total price:", totalPrice);
+      
+      const orderNumber = `ORD-${Date.now()}`;
 
+      const orderDataToInsert = {
+        order_number: orderNumber,
+        customer_name: form.name,
+        customer_email: form.email || null,
+        customer_phone: form.phone,
+        customer_address: null,
+        total_amount: totalPrice,
+        note: form.note || null,
+        order_status: "new",
+        payment_status: "pending",
+      };
+
+      console.log("=== 3. Inserting order with data ===");
+      console.log(orderDataToInsert);
       const { data: orderData, error: orderError } = await supabase
         .from("orders")
-        .insert([
-          {
-            order_number: orderNumber,
-            customer_name: form.name,
-            customer_phone: form.phone,
-            customer_email: form.email,
-            total_amount: totalPrice,
-            note: form.note,
-            order_status: "new",
-            payment_status: "pending",
-          },
-        ])
+        .insert([orderDataToInsert])
         .select("id")
         .single();
 
-      if (orderError) throw orderError;
+      console.log("=== 4. Order insert ===");
+      console.log("Data:", orderData);
+      console.log("Error:", orderError);
+      if (orderError) {
+        console.error("=== ORDER ERROR ===", orderError);
+        throw orderError;
+      }
 
       const orderItems = items.map((item) => ({
         order_id: orderData.id,
@@ -119,18 +127,33 @@ export function CheckoutPage() {
         total_price: item.price * item.quantity,
       }));
 
+      console.log("=== 5. Inserting order items ===");
+      console.log(orderItems);
       const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
-      if (itemsError) throw itemsError;
+      console.log("=== 6. Order items error ===", itemsError);
+      if (itemsError) {
+        console.error("=== ORDER ITEMS ERROR ===", itemsError);
+        throw itemsError;
+      }
 
+      console.log("=== 7. Clearing cart and showing modal ===");
       clearCart();
-      navigate(`/order-success?order=${orderNumber}`);
+      console.log("=== 8. Current showSuccessModal before set ===", showSuccessModal);
+      setShowSuccessModal(true);
+      console.log("=== 9. showSuccessModal should now be true ===");
     } catch (error) {
-      console.error("Error placing order:", error);
-      alert("Error placing order. Please try again.");
+      console.error("=== ! FULL ERROR PLACING ORDER ! ===");
+      console.error(error);
+      alert(`Error placing order: ${JSON.stringify(error)}`);
     } finally {
       setSubmitting(false);
     }
   }
+
+  const handleBackToShop = () => {
+    setShowSuccessModal(false);
+    navigate("/shop");
+  };
 
   if (loading)
     return (
@@ -295,6 +318,59 @@ export function CheckoutPage() {
           </motion.div>
         </div>
       </div>
+
+      {/* Success Modal */}
+      <AnimatePresence>
+        {showSuccessModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          >
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={handleBackToShop}
+              className="absolute inset-0 bg-black/70"
+            />
+            {/* Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="relative z-10 max-w-md w-full"
+            >
+              <div className="bg-gradient-to-br from-[var(--burgundy-dark)] via-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--gold)]/30 rounded-lg p-8 text-center shadow-2xl">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", bounce: 0.5 }}
+                  className="w-16 h-16 rounded-full bg-[var(--gold)] flex items-center justify-center mx-auto mb-6"
+                >
+                  <Check className="w-8 h-8 text-[var(--black)]" />
+                </motion.div>
+                <h2 className="text-2xl text-foreground mb-3" style={{ fontFamily: "Playfair Display, serif" }}>
+                  {t("checkoutSuccess.title")}
+                </h2>
+                <p className="text-[var(--muted-foreground)] mb-8">
+                  {t("checkoutSuccess.description")}
+                </p>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleBackToShop}
+                  className="w-full py-3 bg-[var(--gold)] text-[var(--black)] tracking-[0.2em] uppercase text-sm hover:bg-[var(--gold-light)] transition-colors"
+                >
+                  {t("checkoutSuccess.backToShop")}
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

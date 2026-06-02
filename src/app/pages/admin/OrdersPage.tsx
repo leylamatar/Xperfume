@@ -192,7 +192,7 @@ export function AdminOrdersPage() {
                     <p className="text-foreground">{selectedOrder.customer_name}</p>
                     <p className="text-[var(--muted-foreground)]">{selectedOrder.customer_phone}</p>
                     {selectedOrder.customer_email && <p className="text-[var(--muted-foreground)]">{selectedOrder.customer_email}</p>}
-                    <p className="text-[var(--muted-foreground)]">{selectedOrder.customer_address}, {selectedOrder.district}, {selectedOrder.city}</p>
+                    {selectedOrder.customer_address && <p className="text-[var(--muted-foreground)]">{selectedOrder.customer_address}</p>}
                   </div>
                 </div>
                 <div className="border-t border-[var(--border)] pt-6">

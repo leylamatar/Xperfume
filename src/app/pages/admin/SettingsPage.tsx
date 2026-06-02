@@ -44,7 +44,7 @@ export function AdminSettingsPage() {
       const { data } = await supabase.from("site_settings").select("*");
       const settingsMap: Record<string, string> = {};
       data?.forEach(setting => {
-        settingsMap[setting.key] = setting.value || "";
+        settingsMap[setting.key] = setting.value || setting.value_en || "";
       });
       setSettings(settingsMap);
       if (settingsMap.logo_url) {
@@ -120,12 +120,23 @@ export function AdminSettingsPage() {
       }
 
       for (const [key, value] of Object.entries(updatedSettings)) {
+        const upsertData: any = { 
+          key, 
+          value, 
+          updated_at: new Date().toISOString() 
+        };
+        
+        // If key ends with _ar, set value_ar, else set value_en
+        if (key.endsWith("_ar")) {
+          upsertData.value_ar = value;
+        } else {
+          upsertData.value_en = value;
+        }
+        
         const { error } = await supabase
           .from("site_settings")
-          .upsert(
-            { key, value, updated_at: new Date().toISOString() },
-            { onConflict: "key" }
-          );
+          .upsert(upsertData, { onConflict: "key" });
+          
         if (error) {
           console.error("Settings save error:", {
             message: error.message,

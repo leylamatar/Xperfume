@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useParams, Link } from "react-router";
 import { Star, Minus, Plus, ShoppingBag, Heart, Share2, ChevronRight, ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useCart } from "../context/CartContext";
 import { supabase } from "../lib/supabase";
 import { useLanguage } from "../context/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 export function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -18,6 +20,7 @@ export function ProductDetailPage() {
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
   const { language } = useLanguage();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (slug) loadProduct();
@@ -52,8 +55,8 @@ export function ProductDetailPage() {
   const handleAddToCart = () => {
     if (!product) return;
     const translatedName = language === "ar" ? (product.name_ar || product.name) : product.name;
-    addItem(
-      {
+    for (let i = 0; i < quantity; i++) {
+      addItem({
         id: product.id,
         name: translatedName,
         collection: product.category || "",
@@ -61,10 +64,12 @@ export function ProductDetailPage() {
         priceFormatted: `$${Number(product.price).toLocaleString()}`,
         image: product.image_url || "",
         size: product.size_ml ? `${product.size_ml}ml` : "",
-      },
-      quantity
-    );
+      });
+    }
     setAdded(true);
+    toast.success(t("common.addedToCart"), {
+      description: t("common.productAddedSuccessfully"),
+    });
     setTimeout(() => setAdded(false), 2000);
   };
 
@@ -181,9 +186,9 @@ export function ProductDetailPage() {
                 ))}
               </div>
               {product.stock > 0 ? (
-                <span className="text-[var(--muted-foreground)] text-sm">In Stock</span>
+                <span className="text-[var(--muted-foreground)] text-sm">{t("productDetail.inStock")}</span>
               ) : (
-                <span className="text-red-400 text-sm">Out of Stock</span>
+                <span className="text-red-400 text-sm">{t("productDetail.outOfStock")}</span>
               )}
             </div>
 
@@ -203,6 +208,7 @@ export function ProductDetailPage() {
             <div className="flex items-center gap-6 mb-10">
               <div className="flex items-center gap-4 border border-[var(--border)]">
                 <button
+                  type="button"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="p-4 text-[var(--muted-foreground)] hover:text-[var(--gold)] transition-colors"
                 >
@@ -210,6 +216,7 @@ export function ProductDetailPage() {
                 </button>
                 <span className="text-foreground text-lg w-8 text-center">{quantity}</span>
                 <button
+                  type="button"
                   onClick={() => setQuantity(quantity + 1)}
                   className="p-4 text-[var(--muted-foreground)] hover:text-[var(--gold)] transition-colors"
                 >
@@ -219,21 +226,23 @@ export function ProductDetailPage() {
 
               {product.stock > 0 ? (
                 <motion.button
+                  type="button"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleAddToCart}
                   className="flex-1 flex items-center justify-center gap-3 px-8 py-4 bg-[var(--gold)] text-[var(--black)] tracking-[0.2em] uppercase hover:bg-[var(--gold-light)] transition-colors"
                 >
                   <ShoppingBag className="w-5 h-5" />
-                  {added ? "Added!" : "Add to Cart"}
+                  {added ? t("common.addedToCart") : t("productDetail.addToCart")}
                 </motion.button>
               ) : (
-                <button disabled className="flex-1 flex items-center justify-center gap-3 px-8 py-4 bg-[var(--border)] text-[var(--muted-foreground)] tracking-[0.2em] uppercase cursor-not-allowed">
-                  Out of Stock
+                <button disabled type="button" className="flex-1 flex items-center justify-center gap-3 px-8 py-4 bg-[var(--border)] text-[var(--muted-foreground)] tracking-[0.2em] uppercase cursor-not-allowed">
+                  {t("productDetail.outOfStock")}
                 </button>
               )}
 
               <motion.button
+                type="button"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 className="p-4 border border-[var(--border)] text-[var(--gold)]"

@@ -39,20 +39,21 @@
     "outOfStock": "Out of Stock"
   },
   "cart": {
-    "title": "Your Cart",
-    "empty": "Your cart is empty",
+    "headerLabel": "Your Selection",
+    "title": "Shopping Cart",
+    "itemSingular": "item",
+    "itemPlural": "items",
+    "emptyTitle": "Your cart is empty",
+    "emptyDescription": "Discover our collection of exceptional fragrances.",
+    "exploreCollection": "Explore Collection",
     "continueShopping": "Continue Shopping",
+    "orderSummary": "Order Summary",
     "subtotal": "Subtotal",
-    "proceedToCheckout": "Proceed to Checkout",
-    "promoCode": "Promo Code",
-    "apply": "Apply",
-    "invalidCode": "Invalid promo code. Try ELEGANCE20 or WELCOME10.",
-    "discountApplied": "Discount applied",
-    "shipping": "Shipping",
     "total": "Total",
+    "proceedToCheckout": "Proceed to Checkout",
     "secureCheckout": "Secure checkout · All major cards accepted",
     "sslSecured": "SSL Secured",
-    "30DayReturns": "30-day Returns",
+    "returns": "30-day Returns",
     "giftWrapped": "Gift Wrapped"
   },
   "checkout": {
@@ -88,8 +89,18 @@
   },
   "footer": {
     "description": "A curated collection of luxury fragrances for those who appreciate the finer things in life.",
-    "quickLinks": "Quick Links",
-    "contactUs": "Contact Us"
+    "shop": "Shop",
+    "allFragrances": "All Fragrances",
+    "newArrivals": "New Arrivals",
+    "bestSellers": "Best Sellers",
+    "giftSets": "Gift Sets",
+    "discover": "Discover",
+    "ourStory": "Our Story",
+    "contactUs": "Contact Us",
+    "copyright": "© 2026 Élégance Absolue. All rights reserved. Est. 1847, Grasse.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "shippingPolicy": "Shipping Policy"
   },
   "language": {
     "english": "English",
@@ -100,7 +111,31 @@
     "edit": "Edit",
     "delete": "Delete",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "back": "Back to Home",
+    "addedToCart": "Added to Cart!",
+    "productAddedSuccessfully": "Product successfully added to your cart"
+  },
+  "checkoutSuccess": {
+    "title": "Your order has been successfully received.",
+    "description": "We will contact you soon to confirm the details.",
+    "backToShop": "Back to Shop"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Have a question or want to learn more about our fragrances? We'd love to hear from you.",
+    "info": "Contact Info",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "location": "Grasse, France",
+    "getDirections": "Get Directions",
+    "visitUs": "Visit Us",
+    "sendMessage": "Send Message",
+    "fullName": "Full Name",
+    "emailPlaceholder": "you@example.com",
+    "subject": "Subject",
+    "message": "Your Message"
   },
   "about": {
     "hero": {

@@ -18,7 +18,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       const { data } = await supabase.from("site_settings").select("*");
       const settingsMap: Record<string, string> = {};
       data?.forEach((setting) => {
-        settingsMap[setting.key] = setting.value || "";
+        settingsMap[setting.key] = setting.value || setting.value_en || "";
       });
       setSettings(settingsMap);
     } catch (error) {
