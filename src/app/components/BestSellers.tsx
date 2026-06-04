@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Star, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { useLanguage } from "../context/LanguageContext";
@@ -21,10 +21,10 @@ export function BestSellers() {
   const getBreakpointConfig = () => {
     if (typeof window === 'undefined') return { slidesPerView: 4, spaceBetween: 24 };
     const w = window.innerWidth;
-    if (w < 480) return { slidesPerView: 1.2, spaceBetween: 12 }; // Mobile tiny - 1.2 items
-    if (w < 768) return { slidesPerView: 2, spaceBetween: 16 }; // Mobile normal - 2 items
-    if (w < 1024) return { slidesPerView: 3, spaceBetween: 20 }; // Tablet - 3 items
-    return { slidesPerView: 4, spaceBetween: 24 }; // Desktop -4 items
+    if (w < 480) return { slidesPerView: 1.2, spaceBetween: 12 };
+    if (w < 768) return { slidesPerView: 2, spaceBetween: 16 };
+    if (w < 1024) return { slidesPerView: 3, spaceBetween: 20 };
+    return { slidesPerView: 4, spaceBetween: 24 };
   };
   
   const [config, setConfig] = useState(getBreakpointConfig());
@@ -44,22 +44,16 @@ export function BestSellers() {
       setLoading(true);
       setError(null);
 
-      // First try to get best sellers
       let { data: bestSellerData, error: bestSellerError } = await supabase
         .from("products")
         .select("*")
         .eq("is_best_seller", true)
         .order("created_at", { ascending: false })
         .limit(10);
-      
-      console.log("Best sellers data:", bestSellerData);
-      console.log("Best sellers error:", bestSellerError);
 
       if (bestSellerError) throw bestSellerError;
 
-      // If no best sellers, get latest 10 products
       if (!bestSellerData || bestSellerData.length === 0) {
-        console.log("No best sellers found, fetching latest products");
         const { data: allData, error: allError } = await supabase
           .from("products")
           .select("*")
@@ -80,60 +74,39 @@ export function BestSellers() {
     }
   }
 
-  const maxIndex = Math.max(0, products.length - Math.floor(config.slidesPerView));
+  const visibleItems = Math.floor(config.slidesPerView);
+  const maxIndex = Math.max(0, products.length - visibleItems);
   
-  const next = () => {
-    if (isRTL) {
-      setCurrentIndex((prev) => Math.max(prev - 1, 0));
-    } else {
-      setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
-    }
+  const goNext = () => {
+    setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
   };
 
-  const prev = () => {
-    if (isRTL) {
-      setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
-    } else {
-      setCurrentIndex((prev) => Math.max(prev - 1, 0));
-    }
+  const goPrev = () => {
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
-  // Touch/swipe handlers
   const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    touchEndX.current = e.changedTouches[0].clientX;
-    handleSwipe();
-  };
-
-  const handleSwipe = () => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX.current - touchEndX;
     const swipeThreshold = 50;
-    const diff = touchStartX.current - touchEndX.current;
+    
     if (Math.abs(diff) > swipeThreshold) {
-      if (diff > 0) {
-      // Swiped left - next slide (for RTL would be prev
-        if (isRTL) {
-          prev();
-        } else {
-          next();
-        }
+      if (isRTL) {
+        if (diff > 0) goPrev();
+        else goNext();
       } else {
-      // Swiped right - prev slide (for RTL would be next
-        if (isRTL) {
-          next();
-        } else {
-          prev();
-        }
+        if (diff > 0) goNext();
+        else goPrev();
       }
     }
   };
 
-  // Reset current index if it's out of bounds (when resizing)
   useEffect(() => {
     setCurrentIndex(prev => Math.max(0, Math.min(prev, maxIndex)));
   }, [maxIndex]);
@@ -158,14 +131,16 @@ export function BestSellers() {
 
   if (products.length === 0) return null;
 
-  const isNavVisible = products.length > Math.floor(config.slidesPerView);
+  const isNavVisible = products.length > visibleItems;
+
+  const translateXValue = isRTL 
+    ? `${currentIndex * (100 / config.slidesPerView)}%` 
+    : `-${currentIndex * (100 / config.slidesPerView)}%`;
 
   return (
     <section className="relative py-20 sm:py-32 px-4 sm:px-6 overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-[var(--burgundy-dark)] via-[var(--black-soft)] to-[var(--background)]" />
 
-      {/* Floating Smoke Effect */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(8)].map((_, i) => (
           <motion.div
@@ -190,7 +165,6 @@ export function BestSellers() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto">
-        {/* Header - Compact for mobile */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -208,43 +182,43 @@ export function BestSellers() {
           </h2>
         </motion.div>
 
-        {/* Carousel */}
         <div className="relative" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-          {/* Left Nav Button (swap for RTL */}
           {isNavVisible && (
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={prev}
+              onClick={isRTL ? goNext : goPrev}
               disabled={isRTL ? currentIndex >= maxIndex : currentIndex === 0}
               className={`absolute top-1/2 left-0 sm:left-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors ${
                 (isRTL && currentIndex >= maxIndex) || (!isRTL && currentIndex === 0) ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              {isRTL ? <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" /> : <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />}
+              <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
             </motion.button>
           )}
           
-          {/* Right Nav Button (swap for RTL) */}
           {isNavVisible && (
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={next}
+              onClick={isRTL ? goPrev : goNext}
               disabled={isRTL ? currentIndex === 0 : currentIndex >= maxIndex}
               className={`absolute top-1/2 right-0 sm:right-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors ${
                 (isRTL && currentIndex === 0) || (!isRTL && currentIndex >= maxIndex) ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              {isRTL ? <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" /> : <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />}
+              <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
             </motion.button>
           )}
 
           <div className="overflow-hidden px-8 sm:px-10">
             <motion.div
-              className={`flex ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}
-              style={{ gap: config.spaceBetween }}
-              animate={{ x: isRTL ? `${currentIndex * (100 / config.slidesPerView)}%` : `-${currentIndex * (100 / config.slidesPerView)}%` }}
+              className="flex flex-row"
+              style={{ 
+                gap: config.spaceBetween,
+                direction: isRTL ? 'rtl' : 'ltr'
+              }}
+              animate={{ x: translateXValue }}
               transition={{ duration: 0.6, ease: "easeInOut" }}
             >
               {products.map((product) => (
