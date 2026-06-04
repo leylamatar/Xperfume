@@ -25,19 +25,19 @@ export function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background)] flex items-center justify-center px-6">
+    <div className="min-h-screen bg-[var(--background)] flex items-center justify-center px-4 md:px-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-8 rounded-lg"
+        className="w-full max-w-md bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-6 md:p-8 rounded-lg"
       >
-        <h1 className="text-3xl text-foreground mb-2 text-center" style={{ fontFamily: "Playfair Display, serif" }}>
+        <h1 className="text-2xl md:text-3xl text-foreground mb-2 text-center" style={{ fontFamily: "Playfair Display, serif" }}>
           Admin Login
         </h1>
-        <p className="text-[var(--muted-foreground)] text-center mb-8">Élégance Absolue Admin Panel</p>
+        <p className="text-[var(--muted-foreground)] text-center mb-8 text-sm md:text-base">Élégance Absolue Admin Panel</p>
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Email</label>
+            <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-1 md:mb-2">Email</label>
             <div className="relative">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--muted-foreground)]" />
               <input
@@ -51,7 +51,7 @@ export function AdminLoginPage() {
             </div>
           </div>
           <div>
-            <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Password</label>
+            <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-1 md:mb-2">Password</label>
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--muted-foreground)]" />
               <input
@@ -70,7 +70,7 @@ export function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase hover:bg-[var(--gold-light)] transition-colors disabled:opacity-50"
+            className="w-full py-2.5 md:py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase hover:bg-[var(--gold-light)] transition-colors disabled:opacity-50"
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>

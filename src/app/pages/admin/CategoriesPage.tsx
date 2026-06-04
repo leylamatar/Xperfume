@@ -133,13 +133,13 @@ export function AdminCategoriesPage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center text-foreground">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-[var(--background)] pt-24 pb-12 px-6">
+    <div className="min-h-screen bg-[var(--background)] pt-20 md:pt-24 pb-12 px-4 md:px-6">
       <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl text-foreground"
+            className="text-2xl md:text-4xl text-foreground"
             style={{ fontFamily: "Playfair Display, serif" }}
           >
             Categories
@@ -148,7 +148,7 @@ export function AdminCategoriesPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             onClick={handleNew}
-            className="flex items-center gap-2 px-6 py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase hover:bg-[var(--gold-light)] transition-colors"
+            className="flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase text-xs md:text-sm hover:bg-[var(--gold-light)] transition-colors w-full sm:w-auto justify-center"
           >
             <Plus className="w-4 h-4" /> Add Category
           </motion.button>
@@ -158,10 +158,10 @@ export function AdminCategoriesPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-8 rounded-lg mb-8"
+            className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-5 md:p-8 rounded-lg mb-8"
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl text-foreground" style={{ fontFamily: "Playfair Display, serif" }}>
+              <h2 className="text-xl md:text-2xl text-foreground" style={{ fontFamily: "Playfair Display, serif" }}>
                 {editingCategory ? "Edit Category" : "New Category"}
               </h2>
               <button onClick={() => setShowForm(false)} className="text-[var(--muted-foreground)] hover:text-foreground">
@@ -171,88 +171,88 @@ export function AdminCategoriesPage() {
             <form onSubmit={handleSave} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Name *</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Name *</label>
                   <input
                     type="text"
                     required
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value, slug: slugify(e.target.value) })}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Name Arabic</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Name Arabic</label>
                   <input
                     type="text"
                     dir="rtl"
                     value={form.name_ar}
                     onChange={(e) => setForm({ ...form, name_ar: e.target.value })}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Slug *</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Slug *</label>
                   <input
                     type="text"
                     required
                     value={form.slug}
                     onChange={(e) => setForm({ ...form, slug: e.target.value })}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Sort Order</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Sort Order</label>
                   <input
                     type="number"
                     value={form.sort_order}
                     onChange={(e) => setForm({ ...form, sort_order: Number(e.target.value) })}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                   />
                 </div>
                 <div className="flex items-end">
-                  <label className="flex items-center gap-3 px-5 py-3 border border-[var(--border)] text-foreground cursor-pointer hover:border-[var(--gold)]">
+                  <label className="flex items-center gap-3 px-4 md:px-5 py-3 border border-[var(--border)] text-foreground cursor-pointer hover:border-[var(--gold)]">
                     <input
                       type="checkbox"
                       checked={form.is_active}
                       onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
                       className="w-4 h-4"
                     />
-                    <span className="text-sm tracking-wider uppercase">Active</span>
+                    <span className="text-xs md:text-sm tracking-wider uppercase">Active</span>
                   </label>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Description</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Description</label>
                   <textarea
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
                     rows={4}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Description Arabic</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Description Arabic</label>
                   <textarea
                     dir="rtl"
                     value={form.description_ar}
                     onChange={(e) => setForm({ ...form, description_ar: e.target.value })}
                     rows={4}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
                   />
                 </div>
               </div>
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   type="submit"
-                  className="flex items-center gap-2 px-6 py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase hover:bg-[var(--gold-light)] transition-colors"
+                  className="flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 md:py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase text-xs md:text-sm hover:bg-[var(--gold-light)] transition-colors w-full sm:w-auto"
                 >
                   <Save className="w-4 h-4" /> Save
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="px-6 py-3 border border-[var(--border)] text-[var(--muted-foreground)] tracking-wider uppercase hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors"
+                  className="px-4 md:px-6 py-2.5 md:py-3 border border-[var(--border)] text-[var(--muted-foreground)] tracking-wider uppercase text-xs md:text-sm hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors w-full sm:w-auto"
                 >
                   Cancel
                 </button>
@@ -262,49 +262,51 @@ export function AdminCategoriesPage() {
         )}
 
         <div className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] rounded-lg overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-[var(--border)]">
-                <th className="text-left px-6 py-4 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Name</th>
-                <th className="text-left px-6 py-4 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Slug</th>
-                <th className="text-center px-6 py-4 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Active</th>
-                <th className="text-center px-6 py-4 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Sort</th>
-                <th className="text-right px-6 py-4 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {categories.map((category) => (
-                <tr key={category.id} className="border-b border-[var(--border)] hover:bg-[var(--black-soft)]">
-                  <td className="px-6 py-4 text-foreground">{category.name}</td>
-                  <td className="px-6 py-4 text-[var(--muted-foreground)] text-sm">{category.slug}</td>
-                  <td className="px-6 py-4 text-center">
-                    {category.is_active ? (
-                      <Check className="w-5 h-5 text-[var(--gold)] mx-auto" />
-                    ) : (
-                      <X className="w-5 h-5 text-[var(--muted-foreground)] mx-auto" />
-                    )}
-                  </td>
-                  <td className="px-6 py-4 text-center text-[var(--muted-foreground)]">{category.sort_order}</td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        onClick={() => handleEdit(category)}
-                        className="p-2 text-[var(--muted-foreground)] hover:text-[var(--gold)] transition-colors"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(category.id)}
-                        className="p-2 text-[var(--muted-foreground)] hover:text-red-400 transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-[var(--border)]">
+                  <th className="text-left px-2 md:px-6 py-3 md:py-4 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Name</th>
+                  <th className="text-left px-2 md:px-6 py-3 md:py-4 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Slug</th>
+                  <th className="text-center px-2 md:px-6 py-3 md:py-4 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Active</th>
+                  <th className="text-center px-2 md:px-6 py-3 md:py-4 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Sort</th>
+                  <th className="text-right px-2 md:px-6 py-3 md:py-4 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {categories.map((category) => (
+                  <tr key={category.id} className="border-b border-[var(--border)] hover:bg-[var(--black-soft)]">
+                    <td className="px-2 md:px-6 py-3 md:py-4 text-foreground text-sm md:text-base">{category.name}</td>
+                    <td className="px-2 md:px-6 py-3 md:py-4 text-[var(--muted-foreground)] text-xs md:text-sm">{category.slug}</td>
+                    <td className="px-2 md:px-6 py-3 md:py-4 text-center">
+                      {category.is_active ? (
+                        <Check className="w-5 h-5 text-[var(--gold)] mx-auto" />
+                      ) : (
+                        <X className="w-5 h-5 text-[var(--muted-foreground)] mx-auto" />
+                      )}
+                    </td>
+                    <td className="px-2 md:px-6 py-3 md:py-4 text-center text-[var(--muted-foreground)] text-xs md:text-sm">{category.sort_order}</td>
+                    <td className="px-2 md:px-6 py-3 md:py-4 text-right">
+                      <div className="flex justify-end gap-1 md:gap-2">
+                        <button
+                          onClick={() => handleEdit(category)}
+                          className="p-1.5 md:p-2 text-[var(--muted-foreground)] hover:text-[var(--gold)] transition-colors"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(category.id)}
+                          className="p-1.5 md:p-2 text-[var(--muted-foreground)] hover:text-red-400 transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

@@ -341,7 +341,12 @@ export function AdminTranslationsPage() {
           { onConflict: "key, lang" }
         );
       }
-      alert("Translations saved successfully!");
+      
+      // Clear localStorage cache so the frontend picks up fresh data
+      localStorage.removeItem("translations_en");
+      localStorage.removeItem("translations_ar");
+      
+      alert("Translations saved successfully! Refresh the main site to see changes.");
     } catch (error: any) {
       console.error("Error saving translations:", error);
       alert("Error saving translations: " + (error.message || "Unknown error"));
@@ -356,13 +361,13 @@ export function AdminTranslationsPage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center text-foreground">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-[var(--background)] pt-24 pb-12 px-6">
+    <div className="min-h-screen bg-[var(--background)] pt-20 md:pt-24 pb-12 px-4 md:px-6">
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-wrap justify-between items-center mb-8 gap-4">
+        <div className="flex flex-col sm:flex-row flex-wrap justify-between items-start sm:items-center mb-8 gap-4">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl text-foreground"
+            className="text-2xl md:text-4xl text-foreground"
             style={{ fontFamily: "Playfair Display, serif" }}
           >
             Translations
@@ -372,19 +377,19 @@ export function AdminTranslationsPage() {
             animate={{ opacity: 1, x: 0 }}
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 px-6 py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase hover:bg-[var(--gold-light)] transition-colors disabled:opacity-50"
+            className="flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 md:py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase text-xs md:text-sm hover:bg-[var(--gold-light)] transition-colors disabled:opacity-50 w-full sm:w-auto"
           >
             <Save className="w-4 h-4" /> {saving ? "Saving..." : "Save Translations"}
           </motion.button>
         </div>
 
         {/* Section Filter */}
-        <div className="flex flex-wrap gap-3 mb-8">
+        <div className="flex flex-wrap gap-2 md:gap-3 mb-8">
           {sections.map(section => (
             <button
               key={section}
               onClick={() => setActiveSection(section)}
-              className={`px-4 py-2 text-sm tracking-wider uppercase transition-colors border rounded ${
+              className={`px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm tracking-wider uppercase transition-colors border rounded ${
                 activeSection === section
                   ? "bg-[var(--gold)] text-[var(--black)] border-[var(--gold)]"
                   : "bg-transparent text-[var(--muted-foreground)] border-[var(--border)] hover:text-foreground hover:border-[var(--gold)]"
@@ -396,28 +401,30 @@ export function AdminTranslationsPage() {
         </div>
 
         {/* Translation Grid */}
-        <div className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-8 rounded-lg space-y-6">
+        <div className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-4 md:p-8 rounded-lg space-y-4 md:space-y-6">
           {filteredKeys.map(key => (
-            <div key={key} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
-              <div className="md:col-span-3">
+            <div key={key} className="grid grid-cols-1 gap-3">
+              <div>
                 <label className="block text-[var(--muted-foreground)] text-xs tracking-wider uppercase break-all">{key}</label>
               </div>
-              <div className="md:col-span-4">
-                <label className="block text-[var(--muted-foreground)] text-xs tracking-wider uppercase mb-1">English</label>
-                <input
-                  value={translationsEn[key] || ""}
-                  onChange={(e) => setTranslationsEn({ ...translationsEn, [key]: e.target.value })}
-                  className="w-full px-4 py-2 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
-                />
-              </div>
-              <div className="md:col-span-5">
-                <label className="block text-[var(--muted-foreground)] text-xs tracking-wider uppercase mb-1">العربية</label>
-                <input
-                  value={translationsAr[key] || ""}
-                  onChange={(e) => setTranslationsAr({ ...translationsAr, [key]: e.target.value })}
-                  dir="rtl"
-                  className="w-full px-4 py-2 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[var(--muted-foreground)] text-xs tracking-wider uppercase mb-1">English</label>
+                  <input
+                    value={translationsEn[key] || ""}
+                    onChange={(e) => setTranslationsEn({ ...translationsEn, [key]: e.target.value })}
+                    className="w-full px-4 py-2 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[var(--muted-foreground)] text-xs tracking-wider uppercase mb-1">العربية</label>
+                  <input
+                    value={translationsAr[key] || ""}
+                    onChange={(e) => setTranslationsAr({ ...translationsAr, [key]: e.target.value })}
+                    dir="rtl"
+                    className="w-full px-4 py-2 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                  />
+                </div>
               </div>
             </div>
           ))}

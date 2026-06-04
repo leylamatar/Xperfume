@@ -50,18 +50,18 @@ export function AdminDashboardPage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center text-foreground">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-[var(--background)] pt-24 pb-12 px-6">
+    <div className="min-h-screen bg-[var(--background)] pt-20 md:pt-24 pb-12 px-4 md:px-6">
       <div className="max-w-7xl mx-auto">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl text-foreground mb-8"
+          className="text-2xl md:text-4xl text-foreground mb-8"
           style={{ fontFamily: "Playfair Display, serif" }}
         >
           Admin Dashboard
         </motion.h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
           {[
             { label: "Total Products", value: stats.products, icon: Package, color: "from-[var(--gold)] to-[var(--gold-light)]" },
             { label: "Total Orders", value: stats.orders, icon: ShoppingCart, color: "from-[var(--wine)] to-red-700" },
@@ -73,19 +73,19 @@ export function AdminDashboardPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-6 rounded-lg"
+              className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-5 md:p-6 rounded-lg"
             >
-              <div className={`w-12 h-12 bg-gradient-to-br ${stat.color} rounded-lg flex items-center justify-center mb-4`}>
-                <stat.icon className="w-6 h-6 text-[var(--black)]" />
+              <div className={`w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br ${stat.color} rounded-lg flex items-center justify-center mb-4`}>
+                <stat.icon className="w-5 h-5 md:w-6 md:h-6 text-[var(--black)]" />
               </div>
-              <p className="text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-1">{stat.label}</p>
-              <p className="text-3xl text-foreground">{stat.value}</p>
+              <p className="text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-1">{stat.label}</p>
+              <p className="text-2xl md:text-3xl text-foreground">{stat.value}</p>
             </motion.div>
           ))}
         </div>
 
-        <div className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-8 rounded-lg">
-          <h2 className="text-2xl text-foreground mb-6" style={{ fontFamily: "Playfair Display, serif" }}>
+        <div className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-5 md:p-8 rounded-lg">
+          <h2 className="text-xl md:text-2xl text-foreground mb-6" style={{ fontFamily: "Playfair Display, serif" }}>
             Recent Orders
           </h2>
           {stats.recentOrders.length === 0 ? (
@@ -95,20 +95,20 @@ export function AdminDashboardPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-[var(--border)]">
-                    <th className="text-left py-3 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Order #</th>
-                    <th className="text-left py-3 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Customer</th>
-                    <th className="text-left py-3 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Total</th>
-                    <th className="text-left py-3 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Status</th>
+                    <th className="text-left py-3 px-2 md:px-4 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Order #</th>
+                    <th className="text-left py-3 px-2 md:px-4 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Customer</th>
+                    <th className="text-left py-3 px-2 md:px-4 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Total</th>
+                    <th className="text-left py-3 px-2 md:px-4 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {stats.recentOrders.map((order) => (
                     <tr key={order.id} className="border-b border-[var(--border)]/50">
-                      <td className="py-4 text-foreground">{order.order_number}</td>
-                      <td className="py-4 text-foreground">{order.customer_name}</td>
-                      <td className="py-4 text-[var(--gold)]">${Number(order.total_amount).toLocaleString()}</td>
-                      <td className="py-4">
-                        <span className={`px-3 py-1 rounded-full text-xs tracking-wider uppercase ${
+                      <td className="py-3 md:py-4 px-2 md:px-4 text-foreground text-sm md:text-base">{order.order_number}</td>
+                      <td className="py-3 md:py-4 px-2 md:px-4 text-foreground text-sm md:text-base">{order.customer_name}</td>
+                      <td className="py-3 md:py-4 px-2 md:px-4 text-[var(--gold)] text-sm md:text-base">${Number(order.total_amount).toLocaleString()}</td>
+                      <td className="py-3 md:py-4 px-2 md:px-4">
+                        <span className={`px-2 py-1 md:px-3 md:py-1 rounded-full text-xs tracking-wider uppercase ${
                           order.order_status === "new" ? "bg-yellow-500/20 text-yellow-400" :
                           order.order_status === "preparing" ? "bg-blue-500/20 text-blue-400" :
                           order.order_status === "shipped" ? "bg-purple-500/20 text-purple-400" :

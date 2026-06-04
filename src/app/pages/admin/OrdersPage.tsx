@@ -71,18 +71,18 @@ export function AdminOrdersPage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center text-foreground">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-[var(--background)] pt-24 pb-12 px-6">
+    <div className="min-h-screen bg-[var(--background)] pt-20 md:pt-24 pb-12 px-4 md:px-6">
       <div className="max-w-7xl mx-auto">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl text-foreground mb-8"
+          className="text-2xl md:text-4xl text-foreground mb-8"
           style={{ fontFamily: "Playfair Display, serif" }}
         >
           Orders Management
         </motion.h1>
 
-        <div className="mb-8 flex gap-4">
+        <div className="mb-8 flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--muted-foreground)]" />
             <input
@@ -100,30 +100,30 @@ export function AdminOrdersPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-[var(--border)]">
-                  <th className="text-left py-4 px-6 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Order #</th>
-                  <th className="text-left py-4 px-6 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Customer</th>
-                  <th className="text-left py-4 px-6 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Total</th>
-                  <th className="text-left py-4 px-6 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Order Status</th>
-                  <th className="text-left py-4 px-6 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Payment</th>
-                  <th className="text-right py-4 px-6 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Actions</th>
+                  <th className="text-left py-3 md:py-4 px-2 md:px-6 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Order #</th>
+                  <th className="text-left py-3 md:py-4 px-2 md:px-6 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Customer</th>
+                  <th className="text-left py-3 md:py-4 px-2 md:px-6 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Total</th>
+                  <th className="text-left py-3 md:py-4 px-2 md:px-6 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Status</th>
+                  <th className="text-left py-3 md:py-4 px-2 md:px-6 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Payment</th>
+                  <th className="text-right py-3 md:py-4 px-2 md:px-6 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredOrders.map((order) => (
                   <tr key={order.id} className="border-b border-[var(--border)]/50">
-                    <td className="py-4 px-6 text-foreground font-medium">{order.order_number}</td>
-                    <td className="py-4 px-6">
+                    <td className="py-3 md:py-4 px-2 md:px-6 text-foreground font-medium text-sm md:text-base">{order.order_number}</td>
+                    <td className="py-3 md:py-4 px-2 md:px-6">
                       <div>
-                        <p className="text-foreground">{order.customer_name}</p>
+                        <p className="text-foreground text-sm md:text-base">{order.customer_name}</p>
                         <p className="text-[var(--muted-foreground)] text-xs">{order.customer_email || order.customer_phone}</p>
                       </div>
                     </td>
-                    <td className="py-4 px-6 text-[var(--gold)]">${Number(order.total_amount).toLocaleString()}</td>
-                    <td className="py-4 px-6">
+                    <td className="py-3 md:py-4 px-2 md:px-6 text-[var(--gold)] text-sm md:text-base">${Number(order.total_amount).toLocaleString()}</td>
+                    <td className="py-3 md:py-4 px-2 md:px-6">
                       <select
                         value={order.order_status}
                         onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-                        className="bg-[#3d0814] text-sm border border-[var(--border)] px-3 py-1 text-foreground focus:outline-none focus:border-[var(--gold)]"
+                        className="bg-[#3d0814] text-xs md:text-sm border border-[var(--border)] px-2 md:px-3 py-1 text-foreground focus:outline-none focus:border-[var(--gold)]"
                       >
                         <option value="new">New</option>
                         <option value="preparing">Preparing</option>
@@ -132,23 +132,23 @@ export function AdminOrdersPage() {
                         <option value="cancelled">Cancelled</option>
                       </select>
                     </td>
-                    <td className="py-4 px-6">
+                    <td className="py-3 md:py-4 px-2 md:px-6">
                       <select
                         value={order.payment_status}
                         onChange={(e) => updatePaymentStatus(order.id, e.target.value)}
-                        className="bg-[#3d0814] text-sm border border-[var(--border)] px-3 py-1 text-foreground focus:outline-none focus:border-[var(--gold)]"
+                        className="bg-[#3d0814] text-xs md:text-sm border border-[var(--border)] px-2 md:px-3 py-1 text-foreground focus:outline-none focus:border-[var(--gold)]"
                       >
                         <option value="pending">Pending</option>
                         <option value="paid">Paid</option>
                         <option value="failed">Failed</option>
                       </select>
                     </td>
-                    <td className="py-4 px-6 text-right">
-                      <div className="flex justify-end gap-2">
-                        <button onClick={() => setSelectedOrder(order)} className="p-2 text-[var(--gold)] hover:bg-[var(--gold)]/10 rounded">
+                    <td className="py-3 md:py-4 px-2 md:px-6 text-right">
+                      <div className="flex justify-end gap-1 md:gap-2">
+                        <button onClick={() => setSelectedOrder(order)} className="p-1.5 md:p-2 text-[var(--gold)] hover:bg-[var(--gold)]/10 rounded">
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button onClick={() => deleteOrder(order.id)} className="p-2 text-red-400 hover:bg-red-500/10 rounded">
+                        <button onClick={() => deleteOrder(order.id)} className="p-1.5 md:p-2 text-red-400 hover:bg-red-500/10 rounded">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -161,22 +161,22 @@ export function AdminOrdersPage() {
         </div>
 
         {selectedOrder && (
-          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-6">
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-8 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-5 md:p-8 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             >
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl text-foreground" style={{ fontFamily: "Playfair Display, serif" }}>
+                <h2 className="text-xl md:text-2xl text-foreground" style={{ fontFamily: "Playfair Display, serif" }}>
                   Order Details
                 </h2>
-                <button onClick={() => setSelectedOrder(null)} className="text-[var(--muted-foreground)] hover:text-foreground">
+                <button onClick={() => setSelectedOrder(null)} className="text-[var(--muted-foreground)] hover:text-foreground text-2xl">
                   ✕
                 </button>
               </div>
               <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <p className="text-[var(--muted-foreground)] text-xs tracking-wider uppercase mb-1">Order Number</p>
                     <p className="text-foreground">{selectedOrder.order_number}</p>
@@ -187,7 +187,7 @@ export function AdminOrdersPage() {
                   </div>
                 </div>
                 <div className="border-t border-[var(--border)] pt-6">
-                  <h3 className="text-lg text-foreground mb-4">Customer Information</h3>
+                  <h3 className="text-base md:text-lg text-foreground mb-4">Customer Information</h3>
                   <div className="space-y-2">
                     <p className="text-foreground">{selectedOrder.customer_name}</p>
                     <p className="text-[var(--muted-foreground)]">{selectedOrder.customer_phone}</p>
@@ -196,23 +196,23 @@ export function AdminOrdersPage() {
                   </div>
                 </div>
                 <div className="border-t border-[var(--border)] pt-6">
-                  <h3 className="text-lg text-foreground mb-4">Order Items</h3>
+                  <h3 className="text-base md:text-lg text-foreground mb-4">Order Items</h3>
                   <div className="space-y-3">
                     {selectedOrder.order_items?.map((item: any) => (
                       <div key={item.id} className="flex justify-between">
                         <div>
-                          <p className="text-foreground">{item.product_name}</p>
+                          <p className="text-foreground text-sm md:text-base">{item.product_name}</p>
                           <p className="text-[var(--muted-foreground)] text-xs">Qty: {item.quantity}</p>
                         </div>
-                        <p className="text-[var(--gold)]">${Number(item.total_price).toLocaleString()}</p>
+                        <p className="text-[var(--gold)] text-sm md:text-base">${Number(item.total_price).toLocaleString()}</p>
                       </div>
                     ))}
                   </div>
                 </div>
                 <div className="border-t border-[var(--border)] pt-6">
                   <div className="flex justify-between items-center">
-                    <span className="text-foreground text-lg">Total</span>
-                    <span className="text-[var(--gold)] text-2xl">${Number(selectedOrder.total_amount).toLocaleString()}</span>
+                    <span className="text-foreground text-base md:text-lg">Total</span>
+                    <span className="text-[var(--gold)] text-xl md:text-2xl">${Number(selectedOrder.total_amount).toLocaleString()}</span>
                   </div>
                 </div>
               </div>

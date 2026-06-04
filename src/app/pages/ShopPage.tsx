@@ -4,7 +4,7 @@ import { SlidersHorizontal, Search, ChevronDown, Star, X } from "lucide-react";
 import { toast } from "sonner";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useCart } from "../context/CartContext";
-import { Link } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { supabase } from "../lib/supabase";
 import { useTranslatedProduct, useTranslatedCategory } from "../hooks/useTranslationHelpers";
 import { useTranslation } from "react-i18next";
@@ -31,6 +31,26 @@ export function ShopPage() {
   const [addedProductId, setAddedProductId] = useState<string | null>(null);
   const { addItem } = useCart();
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  // Sync search query from URL
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q !== null) {
+      setSearchQuery(q);
+    }
+  }, [searchParams]);
+
+  // Update URL when local search query changes
+  const handleLocalSearchChange = (value: string) => {
+    setSearchQuery(value);
+    if (value) {
+      navigate(`/shop?q=${encodeURIComponent(value)}`, { replace: true });
+    } else {
+      navigate("/shop", { replace: true });
+    }
+  };
 
   useEffect(() => {
     loadData();
@@ -66,7 +86,11 @@ export function ShopPage() {
       result = result.filter(
         (p) =>
           p.name?.toLowerCase().includes(lowerQuery) ||
+          p.name_en?.toLowerCase().includes(lowerQuery) ||
+          p.name_ar?.toLowerCase().includes(lowerQuery) ||
           p.description?.toLowerCase().includes(lowerQuery) ||
+          p.description_en?.toLowerCase().includes(lowerQuery) ||
+          p.description_ar?.toLowerCase().includes(lowerQuery) ||
           p.category?.toLowerCase().includes(lowerQuery)
       );
     }
@@ -146,7 +170,8 @@ export function ShopPage() {
               type="text"
               placeholder={t("shop.searchPlaceholder")}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleLocalSearchChange(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
               className="w-full pl-12 pr-4 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground placeholder:text-[var(--muted-foreground)] focus:outline-none focus:border-[var(--gold)] transition-colors text-sm"
             />
           </div>

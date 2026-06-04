@@ -305,13 +305,13 @@ export function AdminProductsPage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center text-foreground">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-[var(--background)] pt-24 pb-12 px-6">
+    <div className="min-h-screen bg-[var(--background)] pt-20 md:pt-24 pb-12 px-4 md:px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <motion.h1
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="text-4xl text-foreground"
+            className="text-2xl md:text-4xl text-foreground"
             style={{ fontFamily: "Playfair Display, serif" }}
           >
             Products Management
@@ -320,7 +320,7 @@ export function AdminProductsPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             onClick={() => { setShowForm(true); setEditingProduct(null); resetForm(); }}
-            className="flex items-center gap-2 px-6 py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase hover:bg-[var(--gold-light)] transition-colors"
+            className="flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase text-xs md:text-sm hover:bg-[var(--gold-light)] transition-colors w-full sm:w-auto justify-center"
           >
             <Plus className="w-4 h-4" /> Add Product
           </motion.button>
@@ -330,9 +330,9 @@ export function AdminProductsPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-8 rounded-lg mb-8"
+            className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-5 md:p-8 rounded-lg mb-8"
           >
-            <h2 className="text-2xl text-foreground mb-6" style={{ fontFamily: "Playfair Display, serif" }}>
+            <h2 className="text-xl md:text-2xl text-foreground mb-6" style={{ fontFamily: "Playfair Display, serif" }}>
               {editingProduct ? "Edit Product" : "Add New Product"}
             </h2>
 
@@ -345,25 +345,25 @@ export function AdminProductsPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Product Name</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Product Name</label>
                   <input
                     required
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Product Name Arabic</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Product Name Arabic</label>
                   <input
                     dir="rtl"
                     value={form.name_ar}
                     onChange={(e) => setForm({ ...form, name_ar: e.target.value })}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Category</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Category</label>
                   <select
                     required
                     value={form.category_id}
@@ -371,7 +371,7 @@ export function AdminProductsPage() {
                       const selectedCat = categories.find(cat => cat.id === e.target.value);
                       setForm({ ...form, category_id: e.target.value, category: selectedCat?.name || "" });
                     }}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                   >
                     <option value="">Select Category</option>
                     {categories.filter(cat => cat.is_active).map((cat) => (
@@ -380,40 +380,40 @@ export function AdminProductsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Price ($)</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Price ($)</label>
                   <input
                     required
                     type="number"
                     value={form.price}
                     onChange={(e) => setForm({ ...form, price: e.target.value })}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Old Price ($)</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Old Price ($)</label>
                   <input
                     type="number"
                     value={form.old_price}
                     onChange={(e) => setForm({ ...form, old_price: e.target.value })}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Stock</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Stock</label>
                   <input
                     required
                     type="number"
                     value={form.stock}
                     onChange={(e) => setForm({ ...form, stock: e.target.value })}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Stock Status</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Stock Status</label>
                   <select
                     value={form.stock_status}
                     onChange={(e) => setForm({ ...form, stock_status: e.target.value })}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                   >
                     {STOCK_STATUSES.map((status) => (
                       <option key={status} value={status}>{status}</option>
@@ -421,12 +421,12 @@ export function AdminProductsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Size</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Size</label>
                   <select
                     required
                     value={form.size_ml}
                     onChange={(e) => setForm({ ...form, size_ml: e.target.value })}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                   >
                     <option value="">Select Size</option>
                     {SIZES.map((size) => (
@@ -435,12 +435,12 @@ export function AdminProductsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Gender</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Gender</label>
                   <select
                     required
                     value={form.gender}
                     onChange={(e) => setForm({ ...form, gender: e.target.value })}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                   >
                     <option value="">Select Gender</option>
                     {GENDERS.map((gender) => (
@@ -448,7 +448,7 @@ export function AdminProductsPage() {
                     ))}
                   </select>
                 </div>
-                <div className="flex items-center gap-6">
+                <div className="flex flex-wrap items-center gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
@@ -456,7 +456,7 @@ export function AdminProductsPage() {
                       onChange={(e) => setForm({ ...form, is_featured: e.target.checked })}
                       className="w-4 h-4"
                     />
-                    <span className="text-[var(--muted-foreground)] text-sm">{form.is_featured ? "Featured" : "Not Featured"}</span>
+                    <span className="text-[var(--muted-foreground)] text-xs md:text-sm">{form.is_featured ? "Featured" : "Not Featured"}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -465,7 +465,7 @@ export function AdminProductsPage() {
                       onChange={(e) => setForm({ ...form, is_best_seller: e.target.checked })}
                       className="w-4 h-4"
                     />
-                    <span className="text-[var(--muted-foreground)] text-sm">{form.is_best_seller ? "Best Seller" : "Not Best Seller"}</span>
+                    <span className="text-[var(--muted-foreground)] text-xs md:text-sm">{form.is_best_seller ? "Best Seller" : "Not Best Seller"}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -474,59 +474,59 @@ export function AdminProductsPage() {
                       onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
                       className="w-4 h-4"
                     />
-                    <span className="text-[var(--muted-foreground)] text-sm">{form.is_active ? "Active" : "Passive"}</span>
+                    <span className="text-[var(--muted-foreground)] text-xs md:text-sm">{form.is_active ? "Active" : "Passive"}</span>
                   </label>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Short Description</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Short Description</label>
                   <textarea
                     value={form.short_description}
                     onChange={(e) => setForm({ ...form, short_description: e.target.value })}
                     rows={2}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Short Description Arabic</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Short Description Arabic</label>
                   <textarea
                     dir="rtl"
                     value={form.short_description_ar}
                     onChange={(e) => setForm({ ...form, short_description_ar: e.target.value })}
                     rows={2}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Description</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Description</label>
                   <textarea
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
                     rows={4}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Description Arabic</label>
+                  <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Description Arabic</label>
                   <textarea
                     dir="rtl"
                     value={form.description_ar}
                     onChange={(e) => setForm({ ...form, description_ar: e.target.value })}
                     rows={4}
-                    className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
+                    className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">Product Image</label>
+                <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-2">Product Image</label>
                 <div className="flex flex-wrap items-center gap-4">
-                  <label className="flex items-center gap-2 px-6 py-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors cursor-pointer">
+                  <label className="flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors cursor-pointer">
                     <Upload className="w-4 h-4" />
                     {uploading ? "Uploading..." : "Upload Image"}
                     <input
@@ -540,19 +540,19 @@ export function AdminProductsPage() {
                   {(imageFile || imagePreview) && (
                     <div className="flex items-center gap-3">
                       {imagePreview && (
-                        <img src={imagePreview} alt="Preview" className="w-24 h-24 object-cover rounded border border-[var(--border)]" />
+                        <img src={imagePreview} alt="Preview" className="w-20 h-20 md:w-24 md:h-24 object-cover rounded border border-[var(--border)]" />
                       )}
-                      <span className="text-foreground text-sm">{imageFile?.name || "Current image"}</span>
+                      <span className="text-foreground text-xs md:text-sm">{imageFile?.name || "Current image"}</span>
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="flex gap-4">
-                <button type="submit" className="px-8 py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase hover:bg-[var(--gold-light)] transition-colors" disabled={uploading || saving}>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button type="submit" className="px-6 md:px-8 py-2.5 md:py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase text-xs md:text-sm hover:bg-[var(--gold-light)] transition-colors w-full sm:w-auto" disabled={uploading || saving}>
                   {saving ? "Saving..." : (editingProduct ? "Update Product" : "Add Product")}
                 </button>
-                <button type="button" onClick={() => { setShowForm(false); setEditingProduct(null); resetForm(); }} className="px-8 py-3 border border-[var(--border)] text-[var(--muted-foreground)] tracking-wider uppercase hover:text-foreground transition-colors">
+                <button type="button" onClick={() => { setShowForm(false); setEditingProduct(null); resetForm(); }} className="px-6 md:px-8 py-2.5 md:py-3 border border-[var(--border)] text-[var(--muted-foreground)] tracking-wider uppercase text-xs md:text-sm hover:text-foreground transition-colors w-full sm:w-auto">
                   Cancel
                 </button>
               </div>
@@ -565,64 +565,64 @@ export function AdminProductsPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-[var(--border)]">
-                  <th className="text-left py-4 px-6 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Product</th>
-                  <th className="text-left py-4 px-6 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Price</th>
-                  <th className="text-left py-4 px-6 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Stock</th>
-                  <th className="text-center py-4 px-6 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Featured</th>
-                  <th className="text-center py-4 px-6 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Best Seller</th>
-                  <th className="text-left py-4 px-6 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Status</th>
-                  <th className="text-right py-4 px-6 text-[var(--muted-foreground)] text-sm tracking-wider uppercase">Actions</th>
+                  <th className="text-left py-3 md:py-4 px-2 md:px-6 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Product</th>
+                  <th className="text-left py-3 md:py-4 px-2 md:px-6 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Price</th>
+                  <th className="text-left py-3 md:py-4 px-2 md:px-6 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Stock</th>
+                  <th className="text-center py-3 md:py-4 px-2 md:px-6 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Featured</th>
+                  <th className="text-center py-3 md:py-4 px-2 md:px-6 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Best</th>
+                  <th className="text-left py-3 md:py-4 px-2 md:px-6 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Status</th>
+                  <th className="text-right py-3 md:py-4 px-2 md:px-6 text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {products.map((product) => (
                   <tr key={product.id} className="border-b border-[var(--border)]/50">
-                    <td className="py-4 px-6">
-                      <div className="flex items-center gap-4">
+                    <td className="py-3 md:py-4 px-2 md:px-6">
+                      <div className="flex items-center gap-3">
                         {product.image_url && (
-                          <img src={product.image_url} alt={product.name} className="w-16 h-16 object-cover rounded border border-[var(--border)]" />
+                          <img src={product.image_url} alt={product.name} className="w-10 h-10 md:w-16 md:h-16 object-cover rounded border border-[var(--border)]" />
                         )}
                         <div>
-                          <p className="text-foreground">{product.name}</p>
+                          <p className="text-foreground text-sm md:text-base">{product.name}</p>
                           <p className="text-[var(--muted-foreground)] text-xs">{product.category}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="py-4 px-6 text-[var(--gold)]">${Number(product.price).toLocaleString()}</td>
-                    <td className="py-4 px-6 text-foreground">{product.stock} ({product.stock_status})</td>
-                    <td className="py-4 px-6 text-center">
+                    <td className="py-3 md:py-4 px-2 md:px-6 text-[var(--gold)] text-sm md:text-base">${Number(product.price).toLocaleString()}</td>
+                    <td className="py-3 md:py-4 px-2 md:px-6 text-foreground text-sm md:text-base">{product.stock} ({product.stock_status})</td>
+                    <td className="py-3 md:py-4 px-2 md:px-6 text-center">
                       <button
                         onClick={() => toggleFeatured(product)}
-                        className={`p-2 rounded transition-colors ${
+                        className={`p-1.5 md:p-2 rounded transition-colors ${
                           product.is_featured ? "text-[var(--gold)] bg-[var(--gold)]/10" : "text-[var(--muted-foreground)] hover:text-[var(--gold)]"
                         }`}
                       >
                         <Star className="w-4 h-4" />
                       </button>
                     </td>
-                    <td className="py-4 px-6 text-center">
+                    <td className="py-3 md:py-4 px-2 md:px-6 text-center">
                       <button
                         onClick={() => toggleBestSeller(product)}
-                        className={`p-2 rounded transition-colors ${
+                        className={`p-1.5 md:p-2 rounded transition-colors ${
                           product.is_best_seller ? "text-[var(--gold)] bg-[var(--gold)]/10" : "text-[var(--muted-foreground)] hover:text-[var(--gold)]"
                         }`}
                       >
                         <Trophy className="w-4 h-4" />
                       </button>
                     </td>
-                    <td className="py-4 px-6">
-                      <span className={`px-3 py-1 rounded-full text-xs tracking-wider uppercase ${
+                    <td className="py-3 md:py-4 px-2 md:px-6">
+                      <span className={`px-2 py-1 md:px-3 md:py-1 rounded-full text-xs tracking-wider uppercase ${
                         product.is_active ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"
                       }`}>
                         {product.is_active ? "Active" : "Passive"}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-right">
-                      <div className="flex justify-end gap-2">
-                        <button onClick={() => handleEdit(product)} className="p-2 text-[var(--gold)] hover:bg-[var(--gold)]/10 rounded">
+                    <td className="py-3 md:py-4 px-2 md:px-6 text-right">
+                      <div className="flex justify-end gap-1 md:gap-2">
+                        <button onClick={() => handleEdit(product)} className="p-1.5 md:p-2 text-[var(--gold)] hover:bg-[var(--gold)]/10 rounded">
                           <Edit2 className="w-4 h-4" />
                         </button>
-                        <button onClick={() => handleDelete(product.id)} className="p-2 text-red-400 hover:bg-red-500/10 rounded">
+                        <button onClick={() => handleDelete(product.id)} className="p-1.5 md:p-2 text-red-400 hover:bg-red-500/10 rounded">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>

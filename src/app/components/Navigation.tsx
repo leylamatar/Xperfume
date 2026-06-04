@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { ShoppingBag, Search, Menu, X, ChevronDown } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useCart } from "../context/CartContext";
 import { useSettings } from "../context/SettingsContext";
 import { useLanguage } from "../context/LanguageContext";
@@ -31,6 +31,7 @@ export function Navigation() {
   const { language, changeLanguage } = useLanguage();
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -54,14 +55,14 @@ export function Navigation() {
         animate={{ y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-5 flex items-center justify-between">
           {/* Logo */}
           <Link to="/">
             <motion.div whileHover={{ scale: 1.03 }} className="flex items-center">
               {settings.logo_url ? (
-                <img src={settings.logo_url} alt="Logo" className="h-10 object-contain" />
+                <img src={settings.logo_url} alt="Logo" className="h-8 md:h-10 object-contain" />
               ) : (
-                <span className="text-2xl tracking-tight cursor-pointer" style={{ fontFamily: "Playfair Display, serif" }}>
+                <span className="text-xl md:text-2xl tracking-tight cursor-pointer" style={{ fontFamily: "Playfair Display, serif" }}>
                   <span className="text-[var(--gold)]">Élégance</span>{" "}
                   <span className="text-foreground">Absolue</span>
                 </span>
@@ -70,7 +71,7 @@ export function Navigation() {
           </Link>
 
           {/* Center Navigation */}
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-8 lg:gap-10">
             {NAV_LINKS.map((item) => (
               <Link key={item.key} to={item.href}>
                 <motion.span
@@ -93,26 +94,26 @@ export function Navigation() {
           </div>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-3 md:gap-5">
             {/* Language Switcher */}
-            <div className="relative">
+            <div className="relative hidden sm:block">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="flex items-center gap-2 text-[var(--muted-foreground)] hover:text-[var(--gold)] transition-colors text-sm tracking-wider uppercase"
+                className="flex items-center gap-1 md:gap-2 text-[var(--muted-foreground)] hover:text-[var(--gold)] transition-colors text-xs md:text-sm tracking-wider uppercase"
               >
                 {language === "ar" ? "العربية" : "EN"}
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-3 h-3 md:w-4 md:h-4" />
               </motion.button>
               {langDropdownOpen && (
-                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-[var(--black-soft)] border border-[var(--border)] min-w-[120px] z-50">
+                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-[var(--black-soft)] border border-[var(--border)] min-w-[100px] md:min-w-[120px] z-50">
                   <button
                     onClick={() => {
                       changeLanguage("en");
                       setLangDropdownOpen(false);
                     }}
-                    className={`w-full text-left px-4 py-3 text-sm transition-colors ${
+                    className={`w-full text-left px-3 md:px-4 py-2 md:py-3 text-xs md:text-sm transition-colors ${
                       language === "en"
                         ? "text-[var(--gold)]"
                         : "text-[var(--muted-foreground)] hover:text-[var(--gold)]"
@@ -125,7 +126,7 @@ export function Navigation() {
                       changeLanguage("ar");
                       setLangDropdownOpen(false);
                     }}
-                    className={`w-full text-left px-4 py-3 text-sm transition-colors ${
+                    className={`w-full text-left px-3 md:px-4 py-2 md:py-3 text-xs md:text-sm transition-colors ${
                       language === "ar"
                         ? "text-[var(--gold)]"
                         : "text-[var(--muted-foreground)] hover:text-[var(--gold)]"
@@ -160,7 +161,7 @@ export function Navigation() {
                     key={totalItems}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-2 -right-2 w-4 h-4 bg-[var(--wine)] rounded-full text-white text-xs flex items-center justify-center"
+                    className="absolute -top-2 -right-2 w-5 h-5 bg-[var(--wine)] rounded-full text-white text-xs flex items-center justify-center"
                   >
                     {totalItems}
                   </motion.span>
@@ -169,14 +170,26 @@ export function Navigation() {
             </Link>
 
             {/* Mobile Menu */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden text-[var(--gold)]"
-            >
-              {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </motion.button>
+            <div className="flex items-center gap-3 md:hidden">
+              {/* Mobile Language Switcher */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => changeLanguage(language === "en" ? "ar" : "en")}
+                className="text-[var(--gold)] hover:text-[var(--gold-light)] transition-colors text-xs tracking-wider uppercase"
+              >
+                {language === "ar" ? "العربية" : "EN"}
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setMobileOpen(!mobileOpen)}
+                className="text-[var(--gold)]"
+              >
+                {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </motion.button>
+            </div>
           </div>
         </div>
 
@@ -189,7 +202,7 @@ export function Navigation() {
             transition={{ duration: 0.3 }}
             className="border-t border-[var(--border)] bg-[var(--black)]/95 backdrop-blur-lg"
           >
-            <div className="max-w-7xl mx-auto px-6 py-4">
+            <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted-foreground)]" />
                 <input
@@ -198,6 +211,16 @@ export function Navigation() {
                   placeholder="Search fragrances, collections…"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      if (searchQuery.trim()) {
+                        navigate(`/shop?q=${encodeURIComponent(searchQuery.trim())}`);
+                      } else {
+                        navigate("/shop");
+                      }
+                      setSearchOpen(false);
+                    }
+                  }}
                   className="w-full pl-12 pr-12 py-3 bg-transparent border border-[var(--border)] text-foreground placeholder:text-[var(--muted-foreground)] focus:outline-none focus:border-[var(--gold)] transition-colors"
                 />
                 <button
@@ -221,6 +244,14 @@ export function Navigation() {
           transition={{ duration: 0.4, ease: "easeInOut" }}
           className="fixed inset-0 z-40 bg-[var(--black)]/98 backdrop-blur-xl flex flex-col items-center justify-center"
         >
+          {/* Close button for mobile menu */}
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="absolute top-6 right-6 text-[var(--gold)]"
+          >
+            <X className="w-8 h-8" />
+          </button>
+
           <nav className="flex flex-col items-center gap-8">
             {MOBILE_NAV_LINKS.map((item, index) => (
               <Link key={item.key} to={item.href}>
@@ -228,7 +259,7 @@ export function Navigation() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="text-3xl text-foreground hover:text-[var(--gold)] transition-colors cursor-pointer"
+                  className="text-2xl md:text-3xl text-foreground hover:text-[var(--gold)] transition-colors cursor-pointer"
                   style={{ fontFamily: "Playfair Display, serif" }}
                 >
                   {t(`nav.${item.key}`)}

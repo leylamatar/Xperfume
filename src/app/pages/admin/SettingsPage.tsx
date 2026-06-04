@@ -147,8 +147,12 @@ export function AdminSettingsPage() {
           throw error;
         }
       }
+      
+      // Clear localStorage cache so the frontend picks up fresh data
+      localStorage.removeItem("site_settings");
+      
       setLogoFile(null);
-      alert("Settings saved successfully!");
+      alert("Settings saved successfully! Refresh the main site to see changes.");
     } catch (error: any) {
       console.error("Error saving settings:", error);
       alert("Error saving settings: " + (error.message || "Unknown error"));
@@ -160,13 +164,13 @@ export function AdminSettingsPage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center text-foreground">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-[var(--background)] pt-24 pb-12 px-6">
+    <div className="min-h-screen bg-[var(--background)] pt-20 md:pt-24 pb-12 px-4 md:px-6">
       <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl text-foreground"
+            className="text-2xl md:text-4xl text-foreground"
             style={{ fontFamily: "Playfair Display, serif" }}
           >
             Site Settings
@@ -176,19 +180,19 @@ export function AdminSettingsPage() {
             animate={{ opacity: 1, x: 0 }}
             onClick={handleSave}
             disabled={saving || uploading}
-            className="flex items-center gap-2 px-6 py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase hover:bg-[var(--gold-light)] transition-colors disabled:opacity-50"
+            className="flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 md:py-3 bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase text-xs md:text-sm hover:bg-[var(--gold-light)] transition-colors disabled:opacity-50 w-full sm:w-auto"
           >
             <Save className="w-4 h-4" /> {saving ? "Saving..." : "Save Settings"}
           </motion.button>
         </div>
 
-        <div className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-8 rounded-lg space-y-6">
+        <div className="bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-4 md:p-8 rounded-lg space-y-4 md:space-y-6">
           {SETTING_KEYS.map((setting) => (
             <div key={setting.key}>
-              <label className="block text-[var(--muted-foreground)] text-sm tracking-wider uppercase mb-2">{setting.label}</label>
+              <label className="block text-[var(--muted-foreground)] text-xs md:text-sm tracking-wider uppercase mb-1 md:mb-2">{setting.label}</label>
               {setting.type === "image" ? (
                 <div className="flex flex-wrap items-center gap-4">
-                  <label className="flex items-center gap-2 px-6 py-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors cursor-pointer">
+                  <label className="flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 md:py-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors cursor-pointer w-full sm:w-auto">
                     <Upload className="w-4 h-4" />
                     {uploading ? "Uploading..." : "Upload Logo"}
                     <input
@@ -209,17 +213,17 @@ export function AdminSettingsPage() {
                 <textarea
                   dir={setting.key.endsWith("_ar") ? "rtl" : "ltr"}
                   value={settings[setting.key] || ""}
-                  onChange={(e) => setSettings({ ...settings, [setting.key]: e.target.value })}
+                  onChange={(e) => setSettings({ ...settings, [setting.key]: e.target.value})}
                   rows={4}
-                  className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
+                  className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)] resize-none"
                 />
               ) : (
                 <input
                   type={setting.type}
                   dir={setting.key.endsWith("_ar") ? "rtl" : "ltr"}
                   value={settings[setting.key] || ""}
-                  onChange={(e) => setSettings({ ...settings, [setting.key]: e.target.value })}
-                  className="w-full px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
+                  onChange={(e) => setSettings({ ...settings, [setting.key]: e.target.value})}
+                  className="w-full px-4 md:px-5 py-3 bg-[var(--input-background)] border border-[var(--border)] text-foreground focus:outline-none focus:border-[var(--gold)]"
                 />
               )}
             </div>

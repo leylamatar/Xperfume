@@ -15,14 +15,30 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   async function refreshSettings() {
     try {
+      // First, load from cache immediately
+      const cachedSettings = localStorage.getItem("site_settings");
+      if (cachedSettings) {
+        setSettings(JSON.parse(cachedSettings));
+        setLoading(false);
+      }
+
+      // Then, fetch fresh data in background
       const { data } = await supabase.from("site_settings").select("*");
       const settingsMap: Record<string, string> = {};
       data?.forEach((setting) => {
         settingsMap[setting.key] = setting.value || setting.value_en || "";
       });
+      
+      // Save to cache and update state
+      localStorage.setItem("site_settings", JSON.stringify(settingsMap));
       setSettings(settingsMap);
     } catch (error) {
       console.error("Error loading settings:", error);
+      // Fallback to cache if fetch fails
+      const cachedSettings = localStorage.getItem("site_settings");
+      if (cachedSettings) {
+        setSettings(JSON.parse(cachedSettings));
+      }
     } finally {
       setLoading(false);
     }
