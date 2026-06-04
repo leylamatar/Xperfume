@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { useLanguage } from "../context/LanguageContext";
@@ -11,6 +11,7 @@ export function BestSellers() {
   const [products, setProducts] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { language } = useLanguage();
   const { t } = useTranslation();
   const bestSellersTitle = useTranslatedSetting("best_sellers_title", "Best Sellers");
@@ -42,17 +43,40 @@ export function BestSellers() {
 
   async function loadBestSellers() {
     try {
-      const { data, error } = await supabase
+      setLoading(true);
+      setError(null);
+
+      // First try to get best sellers
+      let { data: bestSellerData, error: bestSellerError } = await supabase
         .from("products")
         .select("*")
         .eq("is_best_seller", true)
         .order("created_at", { ascending: false })
-        .limit(10); // Max 10 products
-      console.log("Best sellers data:", data);
-      console.log("Best sellers error:", error);
-      setProducts(data || []);
-    } catch (error) {
-      console.error("Error loading best sellers:", error);
+        .limit(10);
+      
+      console.log("Best sellers data:", bestSellerData);
+      console.log("Best sellers error:", bestSellerError);
+
+      if (bestSellerError) throw bestSellerError;
+
+      // If no best sellers, get latest 10 products
+      if (!bestSellerData || bestSellerData.length === 0) {
+        console.log("No best sellers found, fetching latest products");
+        const { data: allData, error: allError } = await supabase
+          .from("products")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(10);
+        
+        if (allError) throw allError;
+        setProducts(allData || []);
+      } else {
+        setProducts(bestSellerData);
+      }
+
+    } catch (err: any) {
+      console.error("Error loading best sellers:", err);
+      setError("Products could not be loaded");
     } finally {
       setLoading(false);
     }
@@ -68,7 +92,25 @@ export function BestSellers() {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
-  if (loading) return null;
+  if (loading) return (
+    <section className="relative py-20 sm:py-32 px-4 sm:px-6 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-[var(--burgundy-dark)] via-[var(--black-soft)] to-[var(--background)]" />
+      <div className="relative z-10 max-w-7xl mx-auto flex items-center justify-center">
+        <Loader2 className="w-10 h-10 text-[var(--gold)] animate-spin" />
+      </div>
+    </section>
+  );
+
+  if (error) return (
+    <section className="relative py-20 sm:py-32 px-4 sm:px-6 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-[var(--burgundy-dark)] via-[var(--black-soft)] to-[var(--background)]" />
+      <div className="relative z-10 max-w-7xl mx-auto text-center">
+        <p className="text-[var(--muted-foreground)] text-lg">{error}</p>
+      </div>
+    </section>
+  );
+
+  if (products.length === 0) return null;
 
   return (
     <section className="relative py-20 sm:py-32 px-4 sm:px-6 overflow-hidden">
@@ -119,57 +161,55 @@ export function BestSellers() {
         </motion.div>
 
         {/* Carousel */}
-        {products.length > 0 && (
-          <div className="relative">
-            {/* Left Nav Button */}
-            {products.length > Math.floor(config.slidesPerView) && (
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={prev}
-                disabled={currentIndex === 0}
-                className={`absolute top-1/2 left-0 sm:left-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors ${
-                  currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
-              </motion.button>
-            )}
-            
-            {/* Right Nav Button */}
-            {products.length > Math.floor(config.slidesPerView) && (
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={next}
-                disabled={currentIndex >= maxIndex}
-                className={`absolute top-1/2 right-0 sm:right-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors ${
-                  currentIndex >= maxIndex ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
-              </motion.button>
-            )}
+        <div className="relative">
+          {/* Left Nav Button */}
+          {products.length > Math.floor(config.slidesPerView) && (
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={prev}
+              disabled={currentIndex === 0}
+              className={`absolute top-1/2 left-0 sm:left-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors ${
+                currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
+            </motion.button>
+          )}
+          
+          {/* Right Nav Button */}
+          {products.length > Math.floor(config.slidesPerView) && (
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={next}
+              disabled={currentIndex >= maxIndex}
+              className={`absolute top-1/2 right-0 sm:right-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors ${
+                currentIndex >= maxIndex ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
+            </motion.button>
+          )}
 
-            <div className="overflow-hidden px-8 sm:px-10">
-              <motion.div
-                className="flex"
-                style={{ gap: config.spaceBetween }}
-                animate={{ x: `-${currentIndex * (100 / config.slidesPerView)}%` }}
-                transition={{ duration: 0.6, ease: "easeInOut" }}
-              >
-                {products.map((product) => (
-                  <BestSellersProductCard
-                    key={product.id}
-                    product={product}
-                    slidesPerView={config.slidesPerView}
-                    spaceBetween={config.spaceBetween}
-                  />
-                ))}
-              </motion.div>
-            </div>
+          <div className="overflow-hidden px-8 sm:px-10">
+            <motion.div
+              className="flex"
+              style={{ gap: config.spaceBetween }}
+              animate={{ x: `-${currentIndex * (100 / config.slidesPerView)}%` }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+            >
+              {products.map((product) => (
+                <BestSellersProductCard
+                  key={product.id}
+                  product={product}
+                  slidesPerView={config.slidesPerView}
+                  spaceBetween={config.spaceBetween}
+                />
+              ))}
+            </motion.div>
           </div>
-        )}
+        </div>
       </div>
     </section>
   );

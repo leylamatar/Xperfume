@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useParams, Link } from "react-router";
-import { Star, Minus, Plus, ShoppingBag, Heart, Share2, ChevronRight, ArrowLeft } from "lucide-react";
+import { Star, Minus, Plus, ShoppingBag, Heart, Share2, ChevronRight, ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useCart } from "../context/CartContext";
@@ -14,6 +14,7 @@ export function ProductDetailPage() {
   const [product, setProduct] = useState<any>(null);
   const [related, setRelated] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [wishlisted, setWishlisted] = useState(false);
@@ -28,25 +29,32 @@ export function ProductDetailPage() {
 
   async function loadProduct() {
     try {
-      const { data: productData } = await supabase
+      setLoading(true);
+      setError(null);
+
+      const { data: productData, error: productError } = await supabase
         .from("products")
         .select("*")
         .eq("slug", slug)
         .single();
 
+      if (productError) throw productError;
+
       if (productData) {
         setProduct(productData);
-        const { data: relatedData } = await supabase
+        const { data: relatedData, error: relatedError } = await supabase
           .from("products")
           .select("*")
           .eq("category", productData.category)
-          .eq("is_active", true)
           .neq("id", productData.id)
           .limit(3);
+        
+        if (relatedError) throw relatedError;
         setRelated(relatedData || []);
       }
-    } catch (error) {
-      console.error("Error loading product:", error);
+    } catch (err: any) {
+      console.error("Error loading product:", err);
+      setError("Product could not be loaded");
     } finally {
       setLoading(false);
     }
@@ -54,7 +62,7 @@ export function ProductDetailPage() {
 
   const handleAddToCart = () => {
     if (!product) return;
-    const translatedName = language === "ar" ? (product.name_ar || product.name) : product.name;
+    const translatedName = language === "ar" ? (product.name_ar || product.name_en || product.name) : (product.name_en || product.name);
     for (let i = 0; i < quantity; i++) {
       addItem({
         id: product.id,
@@ -80,7 +88,19 @@ export function ProductDetailPage() {
   if (loading)
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-foreground">
-        Loading...
+        <Loader2 className="w-10 h-10 text-[var(--gold)] animate-spin" />
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-[var(--muted-foreground)] text-lg mb-4">{error}</p>
+          <Link to="/shop" className="text-[var(--gold)] tracking-wider uppercase text-sm border border-[var(--gold)] px-6 py-2 hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors">
+            Back to Shop
+          </Link>
+        </div>
       </div>
     );
 
@@ -98,6 +118,9 @@ export function ProductDetailPage() {
       </div>
     );
 
+  const displayName = language === "ar" ? (product.name_ar || product.name_en || product.name) : (product.name_en || product.name);
+  const displayDescription = language === "ar" ? (product.description_ar || product.description_en || product.description) : (product.description_en || product.description);
+
   return (
     <div className="min-h-screen bg-[var(--background)] pt-20">
       <div className="max-w-7xl mx-auto px-6 py-6">
@@ -106,7 +129,7 @@ export function ProductDetailPage() {
           <ChevronRight className="w-3 h-3" />
           <Link to="/shop" className="hover:text-[var(--gold)] transition-colors">Shop</Link>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-[var(--gold)]">{language === "ar" ? (product.name_ar || product.name) : product.name}</span>
+          <span className="text-[var(--gold)]">{displayName}</span>
         </div>
       </div>
 
@@ -128,7 +151,7 @@ export function ProductDetailPage() {
               >
                 <ImageWithFallback
                   src={allImages[activeImage] || "https://images.unsplash.com/photo-1774682060997-f8959850a7d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg"}
-                  alt={language === "ar" ? (product.name_ar || product.name) : product.name}
+                  alt={displayName}
                   className="h-full w-full object-cover"
                 />
               </motion.div>
@@ -157,7 +180,7 @@ export function ProductDetailPage() {
                   >
                     <ImageWithFallback
                       src={image}
-                      alt={`${language === "ar" ? (product.name_ar || product.name) : product.name} ${index + 1}`}
+                      alt={`${displayName} ${index + 1}`}
                       className="h-full w-full object-cover"
                     />
                   </button>
@@ -176,7 +199,7 @@ export function ProductDetailPage() {
               className="text-5xl md:text-6xl text-foreground mb-6"
               style={{ fontFamily: "Playfair Display, serif" }}
             >
-              {language === "ar" ? (product.name_ar || product.name) : product.name}
+              {displayName}
             </h1>
 
             <div className="flex items-center gap-4 mb-8">
@@ -202,7 +225,7 @@ export function ProductDetailPage() {
             </div>
 
             <p className="text-[var(--muted-foreground)] text-lg leading-relaxed mb-10">
-              {language === "ar" ? (product.description_ar || product.description) : product.description}
+              {displayDescription}
             </p>
 
             <div className="flex items-center gap-6 mb-10">
@@ -263,7 +286,7 @@ export function ProductDetailPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {related.map((p) => {
-                const name = language === "ar" ? (p.name_ar || p.name) : p.name;
+                const name = language === "ar" ? (p.name_ar || p.name_en || p.name) : (p.name_en || p.name);
                 return (
                   <Link key={p.id} to={`/shop/${p.slug}`}>
                     <motion.div

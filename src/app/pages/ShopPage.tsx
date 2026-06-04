@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion } from "motion/react";
-import { SlidersHorizontal, Search, ChevronDown, Star, X } from "lucide-react";
+import { SlidersHorizontal, Search, ChevronDown, Star, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useCart } from "../context/CartContext";
@@ -22,6 +22,7 @@ export function ShopPage() {
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeSort, setActiveSort] = useState("Featured");
   const [activePriceRange, setActivePriceRange] = useState(priceRanges[0]);
@@ -58,14 +59,24 @@ export function ShopPage() {
 
   async function loadData() {
     try {
-      const [productsResult, categoriesResult] = await Promise.all([
-        supabase.from("products").select("*").eq("is_active", true),
-        supabase.from("categories").select("*").eq("is_active", true).order("sort_order", { ascending: true }),
-      ]);
+      setLoading(true);
+      setError(null);
+
+      // Fetch products without is_active filter first (if table doesn't have it)
+      const productsResult = await supabase.from("products").select("*");
+      const categoriesResult = await supabase.from("categories").select("*").order("sort_order", { ascending: true });
+      
+      console.log("Shop page products data:", productsResult.data);
+      console.log("Shop page products error:", productsResult.error);
+      
+      if (productsResult.error) throw productsResult.error;
+      if (categoriesResult.error) throw categoriesResult.error;
+
       setProducts(productsResult.data || []);
       setCategories(categoriesResult.data || []);
-    } catch (error) {
-      console.error("Error loading data:", error);
+    } catch (err: any) {
+      console.error("Error loading data:", err);
+      setError("Products could not be loaded");
     } finally {
       setLoading(false);
     }
@@ -130,7 +141,17 @@ export function ShopPage() {
     setTimeout(() => setAddedProductId(null), 2000);
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center text-foreground">Loading...</div>;
+  if (loading) return (
+    <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
+      <Loader2 className="w-10 h-10 text-[var(--gold)] animate-spin" />
+    </div>
+  );
+
+  if (error) return (
+    <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
+      <p className="text-[var(--muted-foreground)] text-lg">{error}</p>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
@@ -298,8 +319,8 @@ export function ShopPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filtered.map((product, index) => {
                   const { name, short_description } = {
-                    name: product.name_ar || product.name,
-                    short_description: product.short_description_ar || product.short_description,
+                    name: product.name_ar || product.name_en || product.name,
+                    short_description: product.short_description_ar || product.short_description_en || product.short_description,
                   };
                   return (
                     <motion.div

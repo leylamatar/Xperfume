@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useLanguage } from "../context/LanguageContext";
@@ -9,6 +9,7 @@ import { FeaturedProductCard } from "./FeaturedProductCard";
 export function FeaturedPerfumes() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { language } = useLanguage();
   const featuredTitle = useTranslatedSetting("featured_title", "Signature Fragrances");
 
@@ -18,23 +19,62 @@ export function FeaturedPerfumes() {
 
   async function loadFeaturedProducts() {
     try {
-      const { data, error } = await supabase
+      setLoading(true);
+      setError(null);
+      
+      // First try to get featured products
+      let { data: featuredData, error: featuredError } = await supabase
         .from("products")
         .select("*")
         .eq("is_featured", true)
         .order("created_at", { ascending: false })
         .limit(3);
-      console.log("Featured products data:", data);
-      console.log("Featured products error:", error);
-      setProducts(data || []);
-    } catch (error) {
-      console.error("Error loading featured products:", error);
+      
+      console.log("Featured products data:", featuredData);
+      console.log("Featured products error:", featuredError);
+
+      if (featuredError) throw featuredError;
+
+      // If no featured products, get latest 3 products as fallback
+      if (!featuredData || featuredData.length === 0) {
+        console.log("No featured products found, fetching latest products");
+        const { data: allData, error: allError } = await supabase
+          .from("products")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(3);
+        
+        if (allError) throw allError;
+        setProducts(allData || []);
+      } else {
+        setProducts(featuredData);
+      }
+
+    } catch (err: any) {
+      console.error("Error loading featured products:", err);
+      setError("Products could not be loaded");
     } finally {
       setLoading(false);
     }
   }
 
-  if (loading) return null;
+  if (loading) return (
+    <section className="py-32 px-6 bg-[var(--background)]">
+      <div className="max-w-7xl mx-auto flex items-center justify-center">
+        <Loader2 className="w-10 h-10 text-[var(--gold)] animate-spin" />
+      </div>
+    </section>
+  );
+
+  if (error) return (
+    <section className="py-32 px-6 bg-[var(--background)]">
+      <div className="max-w-7xl mx-auto text-center">
+        <p className="text-[var(--muted-foreground)] text-lg">{error}</p>
+      </div>
+    </section>
+  );
+
+  if (products.length === 0) return null;
 
   return (
     <section className="py-32 px-6 bg-[var(--background)]">
