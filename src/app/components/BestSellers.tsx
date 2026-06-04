@@ -15,9 +15,7 @@ export function BestSellers() {
   const { language } = useLanguage();
   const { t } = useTranslation();
   const bestSellersTitle = useTranslatedSetting("best_sellers_title", "Best Sellers");
-  const [isDragging, setIsDragging] = useState(false);
-  const startX = useRef(0);
-  const scrollLeft = useRef(0);
+  const isRTL = language === "ar";
 
   // Responsive configuration with breakpoints
   const getBreakpointConfig = () => {
@@ -85,12 +83,60 @@ export function BestSellers() {
   const maxIndex = Math.max(0, products.length - Math.floor(config.slidesPerView));
   
   const next = () => {
-    setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
+    if (isRTL) {
+      setCurrentIndex((prev) => Math.max(prev - 1, 0));
+    } else {
+      setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
+    }
   };
 
   const prev = () => {
-    setCurrentIndex((prev) => Math.max(prev - 1, 0));
+    if (isRTL) {
+      setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
+    } else {
+      setCurrentIndex((prev) => Math.max(prev - 1, 0));
+    }
   };
+
+  // Touch/swipe handlers
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    touchEndX.current = e.changedTouches[0].clientX;
+    handleSwipe();
+  };
+
+  const handleSwipe = () => {
+    const swipeThreshold = 50;
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+      // Swiped left - next slide (for RTL would be prev
+        if (isRTL) {
+          prev();
+        } else {
+          next();
+        }
+      } else {
+      // Swiped right - prev slide (for RTL would be next
+        if (isRTL) {
+          next();
+        } else {
+          prev();
+        }
+      }
+    }
+  };
+
+  // Reset current index if it's out of bounds (when resizing)
+  useEffect(() => {
+    setCurrentIndex(prev => Math.max(0, Math.min(prev, maxIndex)));
+  }, [maxIndex]);
 
   if (loading) return (
     <section className="relative py-20 sm:py-32 px-4 sm:px-6 overflow-hidden">
@@ -111,6 +157,8 @@ export function BestSellers() {
   );
 
   if (products.length === 0) return null;
+
+  const isNavVisible = products.length > Math.floor(config.slidesPerView);
 
   return (
     <section className="relative py-20 sm:py-32 px-4 sm:px-6 overflow-hidden">
@@ -161,42 +209,42 @@ export function BestSellers() {
         </motion.div>
 
         {/* Carousel */}
-        <div className="relative">
-          {/* Left Nav Button */}
-          {products.length > Math.floor(config.slidesPerView) && (
+        <div className="relative" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+          {/* Left Nav Button (swap for RTL */}
+          {isNavVisible && (
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={prev}
-              disabled={currentIndex === 0}
+              disabled={isRTL ? currentIndex >= maxIndex : currentIndex === 0}
               className={`absolute top-1/2 left-0 sm:left-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors ${
-                currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                (isRTL && currentIndex >= maxIndex) || (!isRTL && currentIndex === 0) ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
+              {isRTL ? <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" /> : <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />}
             </motion.button>
           )}
           
-          {/* Right Nav Button */}
-          {products.length > Math.floor(config.slidesPerView) && (
+          {/* Right Nav Button (swap for RTL) */}
+          {isNavVisible && (
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={next}
-              disabled={currentIndex >= maxIndex}
+              disabled={isRTL ? currentIndex === 0 : currentIndex >= maxIndex}
               className={`absolute top-1/2 right-0 sm:right-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors ${
-                currentIndex >= maxIndex ? 'opacity-50 cursor-not-allowed' : ''
+                (isRTL && currentIndex === 0) || (!isRTL && currentIndex >= maxIndex) ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
+              {isRTL ? <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" /> : <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />}
             </motion.button>
           )}
 
           <div className="overflow-hidden px-8 sm:px-10">
             <motion.div
-              className="flex"
+              className={`flex ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}
               style={{ gap: config.spaceBetween }}
-              animate={{ x: `-${currentIndex * (100 / config.slidesPerView)}%` }}
+              animate={{ x: isRTL ? `${currentIndex * (100 / config.slidesPerView)}%` : `-${currentIndex * (100 / config.slidesPerView)}%` }}
               transition={{ duration: 0.6, ease: "easeInOut" }}
             >
               {products.map((product) => (

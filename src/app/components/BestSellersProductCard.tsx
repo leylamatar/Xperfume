@@ -48,24 +48,24 @@ export function BestSellersProductCard({ product, slidesPerView, spaceBetween }:
     >
       <div className="relative group cursor-pointer block">
         {/* Card */}
-        <div className="relative aspect-[3/4] rounded-lg overflow-hidden bg-[var(--black-soft)] border border-[var(--border)]">
-          <Link to={`/shop/${product.slug}`} className="block w-full h-full">
-            <ImageWithFallback
-              src={product.image_url || "https://images.unsplash.com/photo-1778058505620-6911582e5a9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg"}
-              alt={name}
-              className="h-full w-full object-cover"
-            />
+        <div className="relative rounded-lg overflow-hidden bg-[var(--black-soft)] border border-[var(--border)]">
+          <Link to={`/shop/${product.slug}`} className="block w-full">
+            <div className="relative aspect-[3/4]">
+              <ImageWithFallback
+                src={product.image_url || "https://images.unsplash.com/photo-1778058505620-6911582e5a9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg"}
+                alt={name}
+                className="h-full w-full object-cover"
+              />
+
+              {/* Hover Overlay - only on desktop */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-t from-[var(--burgundy)] via-transparent to-transparent opacity-0 md:group-hover:opacity-90 transition-opacity duration-300 pointer-events-none"
+              />
+            </div>
           </Link>
 
-          {/* Hover Overlay */}
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-t from-[var(--burgundy)] via-transparent to-transparent opacity-0 group-hover:opacity-90 transition-opacity duration-300 pointer-events-none"
-          />
-
-          {/* Info Overlay */}
-          <motion.div
-            className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300"
-          >
+          {/* Info Overlay - always visible on mobile, only hover on desktop */}
+          <div className="p-4 sm:p-6 md:absolute md:bottom-0 md:left-0 md:right-0 md:translate-y-full md:group-hover:translate-y-0 transition-transform duration-300">
             <Link to={`/shop/${product.slug}`}>
               <h3
                 className="text-lg sm:text-2xl mb-1 sm:mb-2 text-foreground hover:text-[var(--gold-light)] transition-colors"
@@ -90,7 +90,7 @@ export function BestSellersProductCard({ product, slidesPerView, spaceBetween }:
                 </motion.button>
               ) : null}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </motion.div>
