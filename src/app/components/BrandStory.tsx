@@ -26,11 +26,11 @@ export function BrandStory() {
               />
 
               {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-[var(--burgundy-dark)] via-transparent to-transparent opacity-40" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#000000] via-transparent to-transparent opacity-40" />
 
               {/* Decorative Border */}
               <motion.div
-                className="absolute inset-0 border-2 border-[var(--gold)] opacity-0"
+                className="absolute inset-0 border-2 border-[#E8E8E8] opacity-0"
                 whileHover={{ opacity: 0.5 }}
                 transition={{ duration: 0.4 }}
               />
@@ -38,7 +38,7 @@ export function BrandStory() {
 
             {/* Floating Accent */}
             <motion.div
-              className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-br from-[var(--gold)] to-[var(--wine)] rounded-full blur-3xl opacity-30"
+              className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-br from-[#E8E8E8] to-[#8A8A8A] rounded-full blur-3xl opacity-30"
               animate={{
                 scale: [1, 1.2, 1],
                 opacity: [0.3, 0.5, 0.3],
@@ -54,7 +54,7 @@ export function BrandStory() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <span className="text-[var(--gold)] tracking-[0.3em] uppercase text-sm">
+            <span className="text-[#CFCFCF] tracking-[0.3em] uppercase text-sm">
               {t("brandStory.tagline")}
             </span>
             <h2
@@ -63,9 +63,9 @@ export function BrandStory() {
             >
               {t("brandStory.titlePart1")}
               <br />
-              <span className="text-[var(--gold-light)]">{t("brandStory.titlePart2")}</span>
+              <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'var(--metallic-gradient)' }}>{t("brandStory.titlePart2")}</span>
             </h2>
-            <div className="space-y-6 text-[var(--muted-foreground)] leading-relaxed">
+            <div className="space-y-6 text-[#8A8A8A] leading-relaxed">
               <p>
                 {t("brandStory.paragraph1")}
               </p>
@@ -88,9 +88,9 @@ export function BrandStory() {
                   className="text-4xl mb-2"
                   style={{ fontFamily: "Playfair Display, serif" }}
                 >
-                  <span className="text-[var(--gold)]">{t("brandStory.stat1")}</span>
+                  <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'var(--metallic-gradient)' }}>{t("brandStory.stat1")}</span>
                 </motion.div>
-                <p className="text-sm text-[var(--muted-foreground)]">
+                <p className="text-sm text-[#8A8A8A]">
                   {t("brandStory.stat1Label")}
                 </p>
               </div>
@@ -103,9 +103,9 @@ export function BrandStory() {
                   className="text-4xl mb-2"
                   style={{ fontFamily: "Playfair Display, serif" }}
                 >
-                  <span className="text-[var(--gold)]">{t("brandStory.stat2")}</span>
+                  <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'var(--metallic-gradient)' }}>{t("brandStory.stat2")}</span>
                 </motion.div>
-                <p className="text-sm text-[var(--muted-foreground)]">
+                <p className="text-sm text-[#8A8A8A]">
                   {t("brandStory.stat2Label")}
                 </p>
               </div>
@@ -118,9 +118,9 @@ export function BrandStory() {
                   className="text-4xl mb-2"
                   style={{ fontFamily: "Playfair Display, serif" }}
                 >
-                  <span className="text-[var(--gold)]">{t("brandStory.stat3")}</span>
+                  <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'var(--metallic-gradient)' }}>{t("brandStory.stat3")}</span>
                 </motion.div>
-                <p className="text-sm text-[var(--muted-foreground)]">
+                <p className="text-sm text-[#8A8A8A]">
                   {t("brandStory.stat3Label")}
                 </p>
               </div>

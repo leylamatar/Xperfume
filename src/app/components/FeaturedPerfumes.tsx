@@ -59,17 +59,17 @@ export function FeaturedPerfumes() {
   }
 
   if (loading) return (
-    <section className="py-32 px-6 bg-[var(--background)]">
+    <section className="py-32 px-6 bg-[#000000]">
       <div className="max-w-7xl mx-auto flex items-center justify-center">
-        <Loader2 className="w-10 h-10 text-[var(--gold)] animate-spin" />
+        <Loader2 className="w-10 h-10 text-[#E8E8E8] animate-spin" />
       </div>
     </section>
   );
 
   if (error) return (
-    <section className="py-32 px-6 bg-[var(--background)]">
+    <section className="py-32 px-6 bg-[#000000]">
       <div className="max-w-7xl mx-auto text-center">
-        <p className="text-[var(--muted-foreground)] text-lg">{error}</p>
+        <p className="text-[#8A8A8A] text-lg">{error}</p>
       </div>
     </section>
   );
@@ -77,7 +77,7 @@ export function FeaturedPerfumes() {
   if (products.length === 0) return null;
 
   return (
-    <section className="py-32 px-6 bg-[var(--background)]">
+    <section className="py-32 px-6 bg-[#000000]">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -88,19 +88,19 @@ export function FeaturedPerfumes() {
           className="text-center mb-20"
         >
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Sparkles className="w-4 h-4 text-[var(--gold)]" />
-            <span className="text-[var(--gold)] tracking-[0.3em] uppercase text-sm">
+            <Sparkles className="w-4 h-4 text-[#E8E8E8]" />
+            <span className="text-[#CFCFCF] tracking-[0.3em] uppercase text-sm">
               Featured
             </span>
-            <Sparkles className="w-4 h-4 text-[var(--gold)]" />
+            <Sparkles className="w-4 h-4 text-[#E8E8E8]" />
           </div>
           <h2
-            className="text-6xl mb-6 text-foreground"
-            style={{ fontFamily: "Playfair Display, serif" }}
+            className="text-6xl mb-6 text-foreground bg-clip-text text-transparent"
+            style={{ fontFamily: "Playfair Display, serif", backgroundImage: 'var(--metallic-gradient)' }}
           >
             {featuredTitle}
           </h2>
-          <p className="text-[var(--muted-foreground)] max-w-2xl mx-auto text-lg">
+          <p className="text-[#8A8A8A] max-w-2xl mx-auto text-lg">
             Curated exclusively for those who appreciate the art of fine
             perfumery
           </p>

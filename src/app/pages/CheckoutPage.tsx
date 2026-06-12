@@ -240,29 +240,30 @@ export function CheckoutPage() {
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-[var(--muted-foreground)]">{t("checkout.bank")}</span>
+                    <span className="text-[#8A8A8A]">{t("checkout.bank")}</span>
                     <span className="text-foreground">{settings.bank_name || "Your Bank"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[var(--muted-foreground)]">{t("checkout.accountHolder")}</span>
+                    <span className="text-[#8A8A8A]">{t("checkout.accountHolder")}</span>
                     <span className="text-foreground">{settings.account_holder || "Your Name"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[var(--muted-foreground)]">IBAN</span>
-                    <span className="text-[var(--gold)] font-mono">{settings.iban || "TR00 0000 0000 0000 0000 0000 00"}</span>
+                    <span className="text-[#8A8A8A]">IBAN</span>
+                    <span className="bg-clip-text text-transparent font-mono" style={{ backgroundImage: 'var(--metallic-gradient)' }}>{settings.iban || "TR00 0000 0000 0000 0000 0000 00"}</span>
                   </div>
                 </div>
-                <p className="text-[var(--muted-foreground)] text-sm mt-6">
+                <p className="text-[#8A8A8A] text-sm mt-6">
                   {t("orderSuccess.paymentNote")}
                 </p>
               </motion.div>
 
               <motion.button
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={submitting}
-                className="w-full py-5 bg-[var(--gold)] text-[var(--black)] tracking-[0.2em] uppercase text-sm hover:bg-[var(--gold-light)] transition-colors flex items-center justify-center gap-3 disabled:opacity-50"
+                className="w-full py-5 text-[#000000] tracking-[0.2em] uppercase text-sm hover:bg-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 shadow-[0_10px_30px_rgba(255,255,255,0.15)]"
+                style={{ backgroundImage: 'var(--metallic-gradient)' }}
               >
                 <Lock className="w-4 h-4" />
                 {submitting ? t("checkout.placingOrder") : `${t("checkout.placeOrder")} · $${totalPrice.toLocaleString()}`}
@@ -275,7 +276,7 @@ export function CheckoutPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <div className="bg-gradient-to-b from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] p-6 sticky top-24">
+            <div className="bg-[#111111] border border-[rgba(255,255,255,0.08)] p-6 sticky top-24">
               <h3
                 className="text-xl text-foreground mb-6"
                 style={{ fontFamily: "Playfair Display, serif" }}
@@ -286,30 +287,30 @@ export function CheckoutPage() {
               <div className="space-y-4 mb-6">
                 {items.map((item) => (
                   <div key={item.id} className="flex gap-3">
-                    <div className="w-14 h-20 shrink-0 border border-[var(--border)] overflow-hidden">
+                    <div className="w-14 h-20 shrink-0 border border-[rgba(255,255,255,0.08)] overflow-hidden">
                       <ImageWithFallback src={item.image} alt={item.name} className="h-full w-full object-cover" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-foreground text-sm truncate" style={{ fontFamily: "Playfair Display, serif" }}>
                         {item.name}
                       </p>
-                      <p className="text-[var(--muted-foreground)] text-xs">
+                      <p className="text-[#8A8A8A] text-xs">
                         {item.size} · Qty {item.quantity}
                       </p>
-                      <p className="text-[var(--gold)] text-sm">${(item.price * item.quantity).toLocaleString()}</p>
+                      <p className="bg-clip-text text-transparent text-sm" style={{ backgroundImage: 'var(--metallic-gradient)' }}>${(item.price * item.quantity).toLocaleString()}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="space-y-3 pt-4 border-t border-[var(--border)]">
+              <div className="space-y-3 pt-4 border-t border-[rgba(255,255,255,0.08)]">
                 <div className="flex justify-between text-sm">
-                  <span className="text-[var(--muted-foreground)]">{t("checkout.subtotal")}</span>
+                  <span className="text-[#8A8A8A]">{t("checkout.subtotal")}</span>
                   <span className="text-foreground">${totalPrice.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between pt-3 border-t border-[var(--border)]">
+                <div className="flex justify-between pt-3 border-t border-[rgba(255,255,255,0.08)]">
                   <span className="text-foreground">{t("checkout.total")}</span>
-                  <span className="text-[var(--gold)] text-xl" style={{ fontFamily: "Playfair Display, serif" }}>
+                  <span className="bg-clip-text text-transparent text-xl" style={{ fontFamily: "Playfair Display, serif", backgroundImage: 'var(--metallic-gradient)' }}>
                     ${totalPrice.toLocaleString()}
                   </span>
                 </div>
@@ -343,26 +344,28 @@ export function CheckoutPage() {
               exit={{ opacity: 0, scale: 0.9 }}
               className="relative z-10 max-w-md w-full"
             >
-              <div className="bg-gradient-to-br from-[var(--burgundy-dark)] via-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--gold)]/30 rounded-lg p-8 text-center shadow-2xl">
+              <div className="bg-gradient-to-br from-[#000000] via-[#111111] to-[#000000] border border-[rgba(255,255,255,0.2)] rounded-lg p-8 text-center shadow-2xl">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", bounce: 0.5 }}
-                  className="w-16 h-16 rounded-full bg-[var(--gold)] flex items-center justify-center mx-auto mb-6"
+                  className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+                  style={{ backgroundImage: 'var(--metallic-gradient)' }}
                 >
-                  <Check className="w-8 h-8 text-[var(--black)]" />
+                  <Check className="w-8 h-8 text-[#000000]" />
                 </motion.div>
                 <h2 className="text-2xl text-foreground mb-3" style={{ fontFamily: "Playfair Display, serif" }}>
                   {t("checkoutSuccess.title")}
                 </h2>
-                <p className="text-[var(--muted-foreground)] mb-8">
+                <p className="text-[#8A8A8A] mb-8">
                   {t("checkoutSuccess.description")}
                 </p>
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleBackToShop}
-                  className="w-full py-3 bg-[var(--gold)] text-[var(--black)] tracking-[0.2em] uppercase text-sm hover:bg-[var(--gold-light)] transition-colors"
+                  className="w-full py-3 text-[#000000] tracking-[0.2em] uppercase text-sm hover:bg-white transition-colors shadow-[0_10px_30px_rgba(255,255,255,0.15)]"
+                  style={{ backgroundImage: 'var(--metallic-gradient)' }}
                 >
                   {t("checkoutSuccess.backToShop")}
                 </motion.button>

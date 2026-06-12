@@ -19,27 +19,27 @@ export function Hero() {
         animate={{ scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--burgundy-dark)] via-[var(--black)] to-[var(--black-soft)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#000000] via-[#080808] to-[#000000]" />
         <ImageWithFallback
           src="https://images.unsplash.com/photo-1774682060992-46c7e9f2e50b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBwZXJmdW1lJTIwYm90dGxlJTIwZWxlZ2FudCUyMGRhcmslMjBiYWNrZ3JvdW5kfGVufDF8fHx8MTc3OTA5MTQyNHww&ixlib=rb-4.1.0&q=80&w=1080"
           alt="Luxury perfume"
-          className="h-full w-full object-cover opacity-30"
+          className="h-full w-full object-cover opacity-25"
         />
       </motion.div>
 
-      {/* Floating Particles */}
+      {/* Floating Silver Particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-[var(--gold)] rounded-full opacity-30"
+            className="absolute w-1 h-1 bg-[#E8E8E8] rounded-full opacity-20"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
             }}
             animate={{
               y: [0, -100, 0],
-              opacity: [0.3, 0.6, 0.3],
+              opacity: [0.2, 0.4, 0.2],
             }}
             transition={{
               duration: 3 + Math.random() * 4,
@@ -58,7 +58,7 @@ export function Hero() {
           transition={{ duration: 1, delay: 0.3 }}
           className="mb-4"
         >
-          <span className="text-[var(--gold)] tracking-[0.3em] uppercase text-sm">
+          <span className="text-[#CFCFCF] tracking-[0.3em] uppercase text-sm">
             {heroSubtitle}
           </span>
         </motion.div>
@@ -73,7 +73,7 @@ export function Hero() {
           {heroTitle.split("\n").map((line, i) => (
             <span key={i}>
               {i % 2 === 0 ? (
-                <span className="text-[var(--gold-light)]">{line}</span>
+                <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'var(--metallic-gradient)' }}>{line}</span>
               ) : (
                 <span className="text-foreground">{line}</span>
               )}
@@ -86,7 +86,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.7 }}
-          className="mb-12 max-w-2xl text-lg text-[var(--muted-foreground)] leading-relaxed"
+          className="mb-12 max-w-2xl text-lg text-[#8A8A8A] leading-relaxed"
         >
           {heroDescription}
         </motion.p>
@@ -96,12 +96,13 @@ export function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.9 }}
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="group relative px-12 py-4 overflow-hidden bg-[var(--gold)] text-[var(--black)] tracking-wider uppercase transition-all"
+            className="group relative px-12 py-4 overflow-hidden text-[#000000] tracking-wider uppercase transition-all"
+            style={{ backgroundImage: 'var(--metallic-gradient)' }}
           >
             <motion.div
-              className="absolute inset-0 bg-[var(--gold-light)]"
+              className="absolute inset-0 bg-white"
               initial={{ x: "-100%" }}
               whileHover={{ x: 0 }}
               transition={{ duration: 0.3 }}
@@ -116,7 +117,7 @@ export function Hero() {
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <ChevronDown className="w-8 h-8 text-[var(--gold)] opacity-60" />
+          <ChevronDown className="w-8 h-8 text-[#8A8A8A] opacity-60" />
         </motion.div>
       </div>
 

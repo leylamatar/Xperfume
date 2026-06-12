@@ -2,53 +2,51 @@
 
 :root {
   --font-size: 16px;
-  --background: #0a0506;
-  --foreground: #f5e6e8;
-  --card: #1a0f11;
-  --card-foreground: #f5e6e8;
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #8b1538;
-  --primary-foreground: #f5e6e8;
-  --secondary: #4a1620;
-  --secondary-foreground: #f5e6e8;
-  --muted: #2d1419;
-  --muted-foreground: #b89b9e;
-  --accent: #d4a574;
-  --accent-foreground: #1a0f11;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(212, 165, 116, 0.2);
+  --background: #000000;
+  --foreground: #FFFFFF;
+  --card: #111111;
+  --card-foreground: #FFFFFF;
+  --popover: #080808;
+  --popover-foreground: #FFFFFF;
+  --primary: #E8E8E8;
+  --primary-foreground: #000000;
+  --secondary: #111111;
+  --secondary-foreground: #CFCFCF;
+  --muted: #111111;
+  --muted-foreground: #8A8A8A;
+  --accent: #E8E8E8;
+  --accent-foreground: #000000;
+  --destructive: #8A8A8A;
+  --destructive-foreground: #FFFFFF;
+  --border: #2A2A2A;
   --input: transparent;
-  --input-background: #1a0f11;
-  --switch-background: #4a1620;
+  --input-background: #111111;
+  --switch-background: #2A2A2A;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #d4a574;
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --ring: #E8E8E8;
+  --chart-1: #E8E8E8;
+  --chart-2: #CFCFCF;
+  --chart-3: #8A8A8A;
+  --chart-4: #D9D9D9;
+  --chart-5: #AFAFAF;
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: #080808;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #000000;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #111111;
+  --sidebar-accent-foreground: #CFCFCF;
+  --sidebar-border: #2A2A2A;
+  --sidebar-ring: #E8E8E8;
 
-  /* Luxury Perfume Theme */
-  --burgundy-dark: #3d0814;
-  --burgundy: #6b1129;
-  --burgundy-light: #8b1538;
-  --wine: #9b234d;
-  --gold: #d4a574;
-  --gold-light: #e8c9a0;
-  --black: #0a0506;
-  --black-soft: #1a0f11;
+  /* Ultra Luxury Black & Silver Theme */
+  --background-secondary: #080808;
+  --luxury-accent: #E8E8E8;
+  --metallic-gradient: linear-gradient(135deg, #FFFFFF 0%, #D9D9D9 20%, #AFAFAF 40%, #F5F5F5 60%, #8F8F8F 80%, #FFFFFF 100%);
+  --text-primary: #FFFFFF;
+  --text-secondary: #CFCFCF;
+  --text-muted: #8A8A8A;
 }
 
 .dark {

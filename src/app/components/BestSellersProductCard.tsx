@@ -48,18 +48,18 @@ export function BestSellersProductCard({ product, slidesPerView, spaceBetween }:
     >
       <div className="relative group cursor-pointer block">
         {/* Card */}
-        <div className="relative rounded-lg overflow-hidden bg-[var(--black-soft)] border border-[var(--border)]">
+        <div className="relative rounded-lg overflow-hidden bg-[rgba(17,17,17,0.95)] border border-[rgba(255,255,255,0.08)]">
           <Link to={`/shop/${product.slug}`} className="block w-full">
             <div className="relative aspect-[3/4]">
               <ImageWithFallback
-                src={product.image_url || "https://images.unsplash.com/photo-1778058505620-6911582e5a9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg"}
+                src={product.image_url || "https://images.unsplash.com/photo-1778058505620-6911582e5a9c?crop=entropy&cs=tinysrgb&fit=max&fm.jpg"}
                 alt={name}
                 className="h-full w-full object-cover"
               />
 
               {/* Hover Overlay - only on desktop */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-t from-[var(--burgundy)] via-transparent to-transparent opacity-0 md:group-hover:opacity-90 transition-opacity duration-300 pointer-events-none"
+                className="absolute inset-0 bg-gradient-to-t from-[#000000] via-transparent to-transparent opacity-0 md:group-hover:opacity-90 transition-opacity duration-300 pointer-events-none"
               />
             </div>
           </Link>
@@ -68,23 +68,24 @@ export function BestSellersProductCard({ product, slidesPerView, spaceBetween }:
           <div className="p-4 sm:p-6 md:absolute md:bottom-0 md:left-0 md:right-0 md:translate-y-full md:group-hover:translate-y-0 transition-transform duration-300">
             <Link to={`/shop/${product.slug}`}>
               <h3
-                className="text-lg sm:text-2xl mb-1 sm:mb-2 text-foreground hover:text-[var(--gold-light)] transition-colors"
+                className="text-lg sm:text-2xl mb-1 sm:mb-2 text-foreground hover:text-[#E8E8E8] transition-colors"
                 style={{ fontFamily: "Playfair Display, serif" }}
               >
                 {name}
               </h3>
             </Link>
             <div className="flex items-center justify-between">
-              <span className="text-base sm:text-xl text-[var(--gold)]">
+              <span className="text-base sm:text-xl bg-clip-text text-transparent" style={{ backgroundImage: 'var(--metallic-gradient)' }}>
                 ${Number(product.price).toLocaleString()}
               </span>
               {product.stock > 0 ? (
                 <motion.button
                   type="button"
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleAddToCart}
-                  className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[var(--gold)] text-[var(--black)] text-xs sm:text-sm tracking-wider uppercase relative z-10"
+                  className="px-3 sm:px-4 py-1.5 sm:py-2 text-[#000000] text-xs sm:text-sm tracking-wider uppercase relative z-10 shadow-[0_10px_30px_rgba(255,255,255,0.15)]"
+                  style={{ backgroundImage: 'var(--metallic-gradient)' }}
                 >
                   {added ? t("common.addedToCart") : t("featured.addToCart")}
                 </motion.button>

@@ -113,18 +113,18 @@ export function BestSellers() {
 
   if (loading) return (
     <section className="relative py-20 sm:py-32 px-4 sm:px-6 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[var(--burgundy-dark)] via-[var(--black-soft)] to-[var(--background)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#000000] via-[#080808] to-[#000000]" />
       <div className="relative z-10 max-w-7xl mx-auto flex items-center justify-center">
-        <Loader2 className="w-10 h-10 text-[var(--gold)] animate-spin" />
+        <Loader2 className="w-10 h-10 text-[#E8E8E8] animate-spin" />
       </div>
     </section>
   );
 
   if (error) return (
     <section className="relative py-20 sm:py-32 px-4 sm:px-6 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[var(--burgundy-dark)] via-[var(--black-soft)] to-[var(--background)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#000000] via-[#080808] to-[#000000]" />
       <div className="relative z-10 max-w-7xl mx-auto text-center">
-        <p className="text-[var(--muted-foreground)] text-lg">{error}</p>
+        <p className="text-[#8A8A8A] text-lg">{error}</p>
       </div>
     </section>
   );
@@ -139,13 +139,13 @@ export function BestSellers() {
 
   return (
     <section className="relative py-20 sm:py-32 px-4 sm:px-6 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[var(--burgundy-dark)] via-[var(--black-soft)] to-[var(--background)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#000000] via-[#080808] to-[#000000]" />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(8)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-32 h-32 rounded-full bg-[var(--gold)] opacity-5 blur-3xl"
+            className="absolute w-32 h-32 rounded-full bg-[#E8E8E8] opacity-5 blur-3xl"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -171,12 +171,12 @@ export function BestSellers() {
           viewport={{ once: true }}
           className="text-center mb-10 sm:mb-16"
         >
-          <span className="text-[var(--gold)] tracking-[0.25em] uppercase text-xs sm:text-sm">
+          <span className="text-[#CFCFCF] tracking-[0.25em] uppercase text-xs sm:text-sm">
             {t('bestSellers.tagline', 'Most Loved')}
           </span>
           <h2
-            className="text-3xl sm:text-5xl md:text-6xl mt-3 sm:mt-4 text-foreground"
-            style={{ fontFamily: "Playfair Display, serif" }}
+            className="text-3xl sm:text-5xl md:text-6xl mt-3 sm:mt-4 bg-clip-text text-transparent"
+            style={{ fontFamily: "Playfair Display, serif", backgroundImage: 'var(--metallic-gradient)' }}
           >
             {bestSellersTitle}
           </h2>
@@ -189,7 +189,7 @@ export function BestSellers() {
               whileTap={{ scale: 0.9 }}
               onClick={isRTL ? goNext : goPrev}
               disabled={isRTL ? currentIndex >= maxIndex : currentIndex === 0}
-              className={`absolute top-1/2 left-0 sm:left-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors ${
+              className={`absolute top-1/2 left-0 sm:left-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[#2A2A2A] text-[#E8E8E8] hover:bg-white hover:text-black transition-colors ${
                 (isRTL && currentIndex >= maxIndex) || (!isRTL && currentIndex === 0) ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
@@ -203,7 +203,7 @@ export function BestSellers() {
               whileTap={{ scale: 0.9 }}
               onClick={isRTL ? goPrev : goNext}
               disabled={isRTL ? currentIndex === 0 : currentIndex >= maxIndex}
-              className={`absolute top-1/2 right-0 sm:right-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[var(--gold)] text-[var(--gold)] hover:bg-[var(--gold)] hover:text-[var(--black)] transition-colors ${
+              className={`absolute top-1/2 right-0 sm:right-2 z-20 -translate-y-1/2 p-2 sm:p-3 border border-[#2A2A2A] text-[#E8E8E8] hover:bg-white hover:text-black transition-colors ${
                 (isRTL && currentIndex === 0) || (!isRTL && currentIndex >= maxIndex) ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >

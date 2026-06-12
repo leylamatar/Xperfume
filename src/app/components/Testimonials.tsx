@@ -32,11 +32,11 @@ export function Testimonials() {
   return (
     <section className="relative py-32 px-6 overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[var(--background)] via-[var(--burgundy-dark)] to-[var(--background)]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#000000] via-[#080808] to-[#000000]" />
 
       {/* Decorative Elements */}
       <motion.div
-        className="absolute top-20 right-20 w-64 h-64 rounded-full bg-[var(--gold)] opacity-5 blur-3xl"
+        className="absolute top-20 right-20 w-64 h-64 rounded-full bg-[#E8E8E8] opacity-5 blur-3xl"
         animate={{
           scale: [1, 1.3, 1],
           opacity: [0.05, 0.1, 0.05],
@@ -44,7 +44,7 @@ export function Testimonials() {
         transition={{ duration: 8, repeat: Infinity }}
       />
       <motion.div
-        className="absolute bottom-20 left-20 w-64 h-64 rounded-full bg-[var(--wine)] opacity-5 blur-3xl"
+        className="absolute bottom-20 left-20 w-64 h-64 rounded-full bg-[#8A8A8A] opacity-5 blur-3xl"
         animate={{
           scale: [1, 1.3, 1],
           opacity: [0.05, 0.1, 0.05],
@@ -60,12 +60,12 @@ export function Testimonials() {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <span className="text-[var(--gold)] tracking-[0.3em] uppercase text-sm">
+          <span className="text-[#CFCFCF] tracking-[0.3em] uppercase text-sm">
             {t("testimonials.tagline")}
           </span>
           <h2
-            className="text-6xl mt-4 text-foreground"
-            style={{ fontFamily: "Playfair Display, serif" }}
+            className="text-6xl mt-4 text-foreground bg-clip-text text-transparent"
+            style={{ fontFamily: "Playfair Display, serif", backgroundImage: 'var(--metallic-gradient)' }}
           >
             {t("testimonials.title")}
           </h2>
@@ -84,14 +84,14 @@ export function Testimonials() {
               <motion.div
                 whileHover={{ y: -10 }}
                 transition={{ duration: 0.3 }}
-                className="relative h-full p-8 bg-gradient-to-br from-[var(--black-soft)] to-[var(--burgundy-dark)] border border-[var(--border)] rounded-lg"
+                className="relative h-full p-8 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded-lg"
               >
                 {/* Quote Icon */}
                 <motion.div
                   className="absolute top-8 right-8 opacity-10"
                   whileHover={{ opacity: 0.2, scale: 1.1 }}
                 >
-                  <Quote className="w-16 h-16 text-[var(--gold)]" />
+                  <Quote className="w-16 h-16 text-[#E8E8E8]" />
                 </motion.div>
 
                 {/* Rating */}
@@ -99,32 +99,32 @@ export function Testimonials() {
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star
                       key={i}
-                      className="w-4 h-4 fill-[var(--gold)] text-[var(--gold)]"
+                      className="w-4 h-4 fill-[#E8E8E8] text-[#E8E8E8]"
                     />
                   ))}
                 </div>
 
                 {/* Content */}
-                <p className="text-[var(--muted-foreground)] leading-relaxed mb-8 italic">
+                <p className="text-[#8A8A8A] leading-relaxed mb-8 italic">
                   "{testimonial.content}"
                 </p>
 
                 {/* Author */}
-                <div className="border-t border-[var(--border)] pt-6">
+                <div className="border-t border-[rgba(255,255,255,0.08)] pt-6">
                   <p
                     className="text-foreground text-lg mb-1"
                     style={{ fontFamily: "Playfair Display, serif" }}
                   >
                     {testimonial.name}
                   </p>
-                  <p className="text-[var(--gold)] text-sm tracking-wide">
+                  <p className="bg-clip-text text-transparent text-sm tracking-wide" style={{ backgroundImage: 'var(--metallic-gradient)' }}>
                     {testimonial.role}
                   </p>
                 </div>
 
                 {/* Hover Glow */}
                 <motion.div
-                  className="absolute inset-0 rounded-lg bg-gradient-to-br from-[var(--gold)] to-transparent opacity-0 hover:opacity-5 transition-opacity duration-500"
+                  className="absolute inset-0 rounded-lg bg-gradient-to-br from-[#E8E8E8] to-transparent opacity-0 hover:opacity-5 transition-opacity duration-500"
                 />
               </motion.div>
             </motion.div>
